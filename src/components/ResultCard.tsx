@@ -59,11 +59,18 @@ export const ResultCard = ({ result }: ResultCardProps) => {
               className="mt-1"
             />
             <div className="flex-1">
-              <CardTitle className="text-lg font-semibold">{result.name}</CardTitle>
+              <CardTitle className="text-lg font-semibold">
+                {result.title || result.name}
+              </CardTitle>
               <CardDescription className="flex items-center gap-2 mt-1">
                 <Globe className="w-4 h-4" />
                 {result.source}
               </CardDescription>
+              {result.snippet && (
+                <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+                  {result.snippet}
+                </p>
+              )}
             </div>
           </div>
           <Badge className={cn("text-xs font-medium", getRiskColor(result.risk_level))}>
@@ -85,6 +92,14 @@ export const ResultCard = ({ result }: ResultCardProps) => {
             ))}
           </div>
         </div>
+
+        {/* Risk Assessment Reasoning */}
+        {result.reasoning && (
+          <div className="p-3 bg-muted/50 rounded-lg">
+            <h4 className="text-sm font-medium text-muted-foreground mb-1">Risk Assessment</h4>
+            <p className="text-sm text-foreground">{result.reasoning}</p>
+          </div>
+        )}
 
         {/* Confidence Score */}
         <div>

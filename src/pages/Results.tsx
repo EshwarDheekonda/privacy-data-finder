@@ -39,9 +39,9 @@ const Results = () => {
     
     // Create CSV content
     const csvContent = [
-      'Name,Source,Risk Level,Confidence,Data Types,Found Date',
-      ...searchResponse.results.map(result => 
-        `"${result.name}","${result.source}","${result.risk_level}","${Math.round(result.confidence * 100)}%","${result.data_types.join('; ')}","${result.found_at}"`
+      'Name,Source,Risk Level,Confidence,Data Types,Found Date,Title,Snippet',
+      ...(searchResponse.results || []).map(result => 
+        `"${result.title || result.name}","${result.source}","${result.risk_level}","${Math.round(result.confidence * 100)}%","${(result.data_types || []).join('; ')}","${result.found_at}","${result.title || ''}","${result.snippet || ''}"`
       )
     ].join('\n');
 

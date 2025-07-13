@@ -3,7 +3,33 @@ import { toast } from '@/hooks/use-toast';
 // API Configuration
 const API_BASE_URL = 'http://127.0.0.1:5000';
 
-// TypeScript Interfaces
+// Raw API Response Interfaces (matching backend structure)
+export interface RawApiResult {
+  platform: string;
+  url: string;
+  title?: string;
+  snippet?: string;
+  data_found: string[];
+  risk_assessment: {
+    level: 'low' | 'medium' | 'high' | 'critical';
+    confidence: number;
+    reasoning: string;
+  };
+  metadata: {
+    found_at: string;
+    last_updated?: string;
+  };
+}
+
+export interface RawApiResponse {
+  query: string;
+  total_results: number;
+  results: RawApiResult[];
+  scan_time: number;
+  timestamp: string;
+}
+
+// Frontend Interfaces (transformed for UI)
 export interface SearchResult {
   id: string;
   name: string;
@@ -12,6 +38,9 @@ export interface SearchResult {
   data_types: string[];
   found_at: string;
   confidence: number;
+  title?: string;
+  snippet?: string;
+  reasoning?: string;
 }
 
 export interface SearchResponse {
@@ -27,6 +56,32 @@ export interface ApiError {
   code?: string;
   details?: any;
 }
+
+// Data Transformation Functions
+export const transformApiResponse = (rawResponse: RawApiResponse): SearchResponse => {
+  return {
+    query: rawResponse.query,
+    total_results: rawResponse.total_results,
+    scan_time: rawResponse.scan_time,
+    timestamp: rawResponse.timestamp,
+    results: rawResponse.results.map(transformApiResult),
+  };
+};
+
+export const transformApiResult = (rawResult: RawApiResult, index: number): SearchResult => {
+  return {
+    id: `${rawResult.platform}-${index}-${Date.now()}`,
+    name: rawResult.title || `${rawResult.platform} Result`,
+    source: rawResult.url || rawResult.platform,
+    risk_level: rawResult.risk_assessment.level,
+    data_types: rawResult.data_found || [],
+    found_at: rawResult.metadata.found_at,
+    confidence: rawResult.risk_assessment.confidence,
+    title: rawResult.title,
+    snippet: rawResult.snippet,
+    reasoning: rawResult.risk_assessment.reasoning,
+  };
+};
 
 // Custom Error Class
 export class SearchApiError extends Error {
@@ -73,8 +128,9 @@ export const searchApi = {
         );
       }
 
-      const data: SearchResponse = await response.json();
-      return data;
+      const rawData: RawApiResponse = await response.json();
+      const transformedData = transformApiResponse(rawData);
+      return transformedData;
     } catch (error) {
       if (error instanceof SearchApiError) {
         throw error;
