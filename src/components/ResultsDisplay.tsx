@@ -27,6 +27,11 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
     const webResults: SearchResult[] = [];
     const socialResults: SearchResult[] = [];
 
+    // Safeguard against undefined results
+    if (!searchResponse?.results || !Array.isArray(searchResponse.results)) {
+      return { webResults, socialResults };
+    }
+
     searchResponse.results.forEach(result => {
       const source = result.source.toLowerCase();
       const isSocial = socialMediaPlatforms.some(platform => 
@@ -43,10 +48,11 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
     });
 
     return { webResults, socialResults };
-  }, [searchResponse.results]);
+  }, [searchResponse?.results]);
 
   // Apply filters
   const filterResults = (results: SearchResult[]): SearchResult[] => {
+    if (!results || !Array.isArray(results)) return [];
     return results.filter(result => {
       // Platform filter
       if (filters.platforms.length > 0 && !filters.platforms.includes(result.source)) {
@@ -84,7 +90,7 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
 
   const filteredWebResults = filterResults(categorizedResults.webResults);
   const filteredSocialResults = filterResults(categorizedResults.socialResults);
-  const filteredAllResults = filterResults(searchResponse.results);
+  const filteredAllResults = filterResults(searchResponse?.results || []);
 
   const getCurrentResults = () => {
     switch (activeTab) {

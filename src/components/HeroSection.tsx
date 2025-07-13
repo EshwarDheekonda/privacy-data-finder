@@ -3,7 +3,7 @@ import { Search, Shield, Zap, Eye, Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
-import { searchApi, handleApiError, type SearchResponse } from '@/lib/api';
+import { searchApi, handleApiError, SearchResponse } from '@/lib/api';
 import { useCounter } from '@/contexts/CounterContext';
 import { AnimatedCounter } from '@/components/AnimatedCounter';
 import { useNavigate } from 'react-router-dom';
