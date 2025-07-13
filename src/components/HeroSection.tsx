@@ -6,6 +6,7 @@ import { toast } from '@/hooks/use-toast';
 import { searchApi, handleApiError, type SearchResponse } from '@/lib/api';
 import { useCounter } from '@/contexts/CounterContext';
 import { AnimatedCounter } from '@/components/AnimatedCounter';
+import { useNavigate } from 'react-router-dom';
 import heroImage from '@/assets/hero-privacy.jpg';
 
 export const HeroSection = () => {
@@ -13,6 +14,7 @@ export const HeroSection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
   const { count, incrementCounter } = useCounter();
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -44,8 +46,10 @@ export const HeroSection = () => {
         description: `Found ${response.total_results} potential privacy risks in ${response.scan_time}s`,
       });
 
-      // TODO: Navigate to results page or show results
-      console.log('Search results:', response);
+      // Navigate to results page with the response data
+      navigate('/results', { 
+        state: { searchResponse: response }
+      });
       
     } catch (error: any) {
       handleApiError(error);
