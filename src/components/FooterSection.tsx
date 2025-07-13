@@ -1,0 +1,196 @@
+import { Shield, Mail, Phone, MapPin, Github, Twitter, Linkedin } from 'lucide-react';
+
+export const FooterSection = () => {
+  const footerLinks = {
+    product: [
+      { name: "Features", href: "#features" },
+      { name: "How it Works", href: "#how-it-works" },
+      { name: "Pricing", href: "#pricing" },
+      { name: "API Docs", href: "#api" }
+    ],
+    company: [
+      { name: "About Us", href: "#about" },
+      { name: "Careers", href: "#careers" },
+      { name: "Press", href: "#press" },
+      { name: "Contact", href: "#contact" }
+    ],
+    resources: [
+      { name: "Privacy Guide", href: "#guide" },
+      { name: "Security Center", href: "#security" },
+      { name: "Help Center", href: "#help" },
+      { name: "Status", href: "#status" }
+    ],
+    legal: [
+      { name: "Privacy Policy", href: "#privacy" },
+      { name: "Terms of Service", href: "#terms" },
+      { name: "Data Processing", href: "#data" },
+      { name: "Compliance", href: "#compliance" }
+    ]
+  };
+
+  const socialLinks = [
+    { icon: Twitter, href: "#", label: "Twitter" },
+    { icon: Linkedin, href: "#", label: "LinkedIn" },
+    { icon: Github, href: "#", label: "GitHub" }
+  ];
+
+  return (
+    <footer className="bg-surface border-t border-border">
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-12">
+          {/* Company Info */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-xl font-bold gradient-text">PrivacyGuard</span>
+            </div>
+            <p className="text-muted-foreground mb-6 leading-relaxed">
+              Advanced PII risk assessment and privacy protection tools for individuals and enterprises. 
+              Secure your digital identity with real-time monitoring and actionable insights.
+            </p>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <Mail className="w-4 h-4" />
+                <span>contact@privacyguard.com</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <Phone className="w-4 h-4" />
+                <span>+1 (555) 123-4567</span>
+              </div>
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <MapPin className="w-4 h-4" />
+                <span>San Francisco, CA</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Product Links */}
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-4">Product</h3>
+            <ul className="space-y-3">
+              {footerLinks.product.map((link, index) => (
+                <li key={index}>
+                  <a 
+                    href={link.href} 
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Company Links */}
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-4">Company</h3>
+            <ul className="space-y-3">
+              {footerLinks.company.map((link, index) => (
+                <li key={index}>
+                  <a 
+                    href={link.href} 
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Resources Links */}
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-4">Resources</h3>
+            <ul className="space-y-3">
+              {footerLinks.resources.map((link, index) => (
+                <li key={index}>
+                  <a 
+                    href={link.href} 
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal Links */}
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-4">Legal</h3>
+            <ul className="space-y-3">
+              {footerLinks.legal.map((link, index) => (
+                <li key={index}>
+                  <a 
+                    href={link.href} 
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                  >
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Security Certifications */}
+        <div className="border-t border-border pt-8 mb-8">
+          <div className="text-center mb-6">
+            <h4 className="text-sm font-semibold text-foreground mb-4">Security & Compliance</h4>
+            <div className="flex justify-center items-center gap-6 flex-wrap">
+              <div className="glass-card p-3 px-4 text-xs font-medium">
+                🛡️ SOC 2 Type II
+              </div>
+              <div className="glass-card p-3 px-4 text-xs font-medium">
+                🔒 GDPR Compliant
+              </div>
+              <div className="glass-card p-3 px-4 text-xs font-medium">
+                ⭐ ISO 27001
+              </div>
+              <div className="glass-card p-3 px-4 text-xs font-medium">
+                🎯 CCPA Ready
+              </div>
+              <div className="glass-card p-3 px-4 text-xs font-medium">
+                🔐 Zero Data Retention
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="text-sm text-muted-foreground">
+            © 2024 PrivacyGuard. All rights reserved.
+          </div>
+          
+          {/* Social Links */}
+          <div className="flex items-center gap-4">
+            {socialLinks.map((social, index) => (
+              <a
+                key={index}
+                href={social.href}
+                aria-label={social.label}
+                className="w-10 h-10 glass-card flex items-center justify-center interactive-hover"
+              >
+                <social.icon className="w-5 h-5 text-muted-foreground" />
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Privacy Notice */}
+        <div className="mt-8 text-center">
+          <div className="glass-card p-4 max-w-2xl mx-auto">
+            <p className="text-xs text-muted-foreground">
+              <span className="text-secondary font-medium">Privacy First:</span> We do not store, retain, or share any personal data from assessments. 
+              All scans are performed in real-time and results are delivered directly to you without any data persistence.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
