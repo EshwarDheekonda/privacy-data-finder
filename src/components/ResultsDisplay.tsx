@@ -29,6 +29,21 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
     firstResult: searchResponse?.results?.[0]
   });
 
+  // Helper functions for categorization
+  const isSocialMediaDomain = (url: string): boolean => {
+    if (!url) return false;
+    const socialDomains = ['linkedin.com', 'facebook.com', 'twitter.com', 'x.com', 'instagram.com', 'tiktok.com', 'youtube.com'];
+    return socialDomains.some(domain => url.toLowerCase().includes(domain));
+  };
+
+  const getDomainFromUrl = (url: string): string => {
+    try {
+      return new URL(url).hostname;
+    } catch {
+      return url || 'unknown';
+    }
+  };
+
   // Simplified categorization based on domain analysis
   const categorizedResults = useMemo(() => {
     const webResults: SearchResult[] = [];
@@ -58,21 +73,6 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
     console.log(`📊 Categorization complete: ${webResults.length} web, ${socialResults.length} social (Total: ${webResults.length + socialResults.length})`);
     return { webResults, socialResults };
   }, [searchResponse?.results]);
-
-  // Helper functions for categorization
-  const isSocialMediaDomain = (url: string): boolean => {
-    if (!url) return false;
-    const socialDomains = ['linkedin.com', 'facebook.com', 'twitter.com', 'x.com', 'instagram.com', 'tiktok.com', 'youtube.com'];
-    return socialDomains.some(domain => url.toLowerCase().includes(domain));
-  };
-
-  const getDomainFromUrl = (url: string): string => {
-    try {
-      return new URL(url).hostname;
-    } catch {
-      return url || 'unknown';
-    }
-  };
 
   // Apply filters
   const filterResults = (results: SearchResult[]): SearchResult[] => {
