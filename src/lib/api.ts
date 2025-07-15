@@ -108,11 +108,13 @@ export const transformApiResponse = (rawResponse: RawApiResponse): SearchRespons
     });
   }
 
-  // Validation
-  const expectedTotal = rawResponse.total_results;
+  // Validation - fix expected count calculation
+  const expectedTotal = rawResponse.total_results + rawResponse.total_social_results;
   const actualTotal = allResults.length;
   
   console.log('📊 TRANSFORMATION SUMMARY:', {
+    webpage_results: rawResponse.total_results,
+    social_results: rawResponse.total_social_results,
     expected_total: expectedTotal,
     actual_total: actualTotal,
     success_rate: actualTotal > 0 ? `${Math.round((actualTotal / expectedTotal) * 100)}%` : '0%',
@@ -120,12 +122,14 @@ export const transformApiResponse = (rawResponse: RawApiResponse): SearchRespons
   });
 
   if (actualTotal !== expectedTotal) {
-    console.warn(`⚠️ Result count mismatch: Expected ${expectedTotal}, got ${actualTotal}`);
+    console.warn(`⚠️ Result count mismatch: Expected ${expectedTotal} (${rawResponse.total_results} webpages + ${rawResponse.total_social_results} social), got ${actualTotal}`);
+  } else {
+    console.log(`✅ Result count matches: ${actualTotal} results processed successfully`);
   }
 
   return {
     query: rawResponse.query,
-    total_results: actualTotal, // Use actual count for UI consistency
+    total_results: expectedTotal, // Use combined backend count for UI consistency
     scan_time: 0,
     timestamp: new Date().toISOString(),
     results: allResults,
