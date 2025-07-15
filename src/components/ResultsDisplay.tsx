@@ -29,61 +29,50 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
     firstResult: searchResponse?.results?.[0]
   });
 
-  // Categorize results with improved logic
+  // Simplified categorization based on domain analysis
   const categorizedResults = useMemo(() => {
     const webResults: SearchResult[] = [];
     const socialResults: SearchResult[] = [];
 
-    // Safeguard against undefined results
     if (!searchResponse?.results || !Array.isArray(searchResponse.results)) {
       console.warn('No results array found:', searchResponse);
       return { webResults, socialResults };
     }
 
-    console.log(`Categorizing ${searchResponse.results.length} results`);
+    console.log(`📋 Categorizing ${searchResponse.results.length} results`);
 
     searchResponse.results.forEach((result, index) => {
-      try {
-        // Enhanced categorization logic - check multiple indicators
-        const isSocialMedia = result.id.startsWith('social-') || 
-                              result.id.startsWith('social-webpage-') ||
-                              result.data_types.some(type => 
-                                type.includes('Profile') && (
-                                  type.includes('Social Media') || type.includes('LinkedIn') || 
-                                  type.includes('Facebook') || type.includes('Twitter') || 
-                                  type.includes('Instagram') || type.includes('TikTok') || 
-                                  type.includes('YouTube') || type.includes('Snapchat') ||
-                                  type.includes('Pinterest')
-                                )
-                              ) ||
-                              // Also check source URL for social media domains
-                              (result.source && (
-                                result.source.includes('linkedin.com') || 
-                                result.source.includes('facebook.com') || 
-                                result.source.includes('twitter.com') || 
-                                result.source.includes('x.com') ||
-                                result.source.includes('instagram.com') || 
-                                result.source.includes('tiktok.com') ||
-                                result.source.includes('youtube.com')
-                              ));
+      // Primary categorization: Check source URL domain
+      const isSocialMedia = result.id.startsWith('social-') || 
+                           (result.source && isSocialMediaDomain(result.source));
 
-        if (isSocialMedia) {
-          socialResults.push(result);
-          console.log(`✓ Categorized as SOCIAL: ${result.name} (${result.source}) - ID: ${result.id}`);
-        } else {
-          webResults.push(result);
-          console.log(`✓ Categorized as WEB: ${result.name} (${result.source}) - ID: ${result.id}`);
-        }
-      } catch (error) {
-        console.error(`Error categorizing result ${index}:`, error, result);
-        // Default to web if there's an error
+      if (isSocialMedia) {
+        socialResults.push(result);
+        console.log(`👥 SOCIAL: ${result.name} (${getDomainFromUrl(result.source)})`);
+      } else {
         webResults.push(result);
+        console.log(`🌐 WEB: ${result.name} (${getDomainFromUrl(result.source)})`);
       }
     });
 
-    console.log(`Categorization complete: ${webResults.length} web, ${socialResults.length} social`);
+    console.log(`📊 Categorization complete: ${webResults.length} web, ${socialResults.length} social (Total: ${webResults.length + socialResults.length})`);
     return { webResults, socialResults };
   }, [searchResponse?.results]);
+
+  // Helper functions for categorization
+  const isSocialMediaDomain = (url: string): boolean => {
+    if (!url) return false;
+    const socialDomains = ['linkedin.com', 'facebook.com', 'twitter.com', 'x.com', 'instagram.com', 'tiktok.com', 'youtube.com'];
+    return socialDomains.some(domain => url.toLowerCase().includes(domain));
+  };
+
+  const getDomainFromUrl = (url: string): string => {
+    try {
+      return new URL(url).hostname;
+    } catch {
+      return url || 'unknown';
+    }
+  };
 
   // Apply filters
   const filterResults = (results: SearchResult[]): SearchResult[] => {
