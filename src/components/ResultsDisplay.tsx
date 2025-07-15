@@ -78,37 +78,46 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
   // Apply filters
   const filterResults = (results: SearchResult[]): SearchResult[] => {
     if (!results || !Array.isArray(results)) return [];
+    
+    console.log(`🔍 Filtering ${results.length} results with filters:`, filters);
+    
     return results.filter(result => {
-      // Platform filter
+      // Platform filter - when no platforms selected, show all
       if (filters.platforms.length > 0 && !filters.platforms.includes(result.source)) {
+        console.log(`❌ Platform filter excluded: ${result.name}`);
         return false;
       }
 
-      // Risk level filter
+      // Risk level filter - when no risk levels selected, show all
       if (filters.riskLevels.length > 0 && !filters.riskLevels.includes(result.risk_level)) {
+        console.log(`❌ Risk level filter excluded: ${result.name} (${result.risk_level})`);
         return false;
       }
 
       // Confidence range filter
       const confidence = Math.round(result.confidence * 100);
       if (confidence < filters.confidenceRange[0] || confidence > filters.confidenceRange[1]) {
+        console.log(`❌ Confidence filter excluded: ${result.name} (${confidence}%)`);
         return false;
       }
 
-      // Domain filter
+      // Domain filter - when no domains selected, show all
       if (filters.domains.length > 0) {
         try {
           const domain = new URL(result.source).hostname;
           if (!filters.domains.includes(domain)) {
+            console.log(`❌ Domain filter excluded: ${result.name} (${domain})`);
             return false;
           }
         } catch {
           if (!filters.domains.includes(result.source)) {
+            console.log(`❌ Domain filter excluded: ${result.name} (invalid URL)`);
             return false;
           }
         }
       }
 
+      console.log(`✅ Filter passed: ${result.name}`);
       return true;
     });
   };
