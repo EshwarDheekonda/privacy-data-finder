@@ -129,6 +129,57 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
 
   const currentResults = getCurrentResults();
 
+  // Handle zero results case
+  if (!searchResponse.results || searchResponse.results.length === 0) {
+    return (
+      <div className="space-y-6">
+        {/* Search Summary */}
+        <div className="glass-card p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold">Privacy Assessment Results</h2>
+            <Badge variant="outline" className="text-sm">
+              Scan completed in {searchResponse.scan_time}s
+            </Badge>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <Search className="w-4 h-4 text-muted-foreground" />
+              <span>Query: <span className="font-medium">{searchResponse.query}</span></span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Globe className="w-4 h-4 text-muted-foreground" />
+              <span>Total Results: <span className="font-medium">0</span></span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-muted-foreground" />
+              <span>Timestamp: <span className="font-medium">{new Date(searchResponse.timestamp).toLocaleString()}</span></span>
+            </div>
+          </div>
+        </div>
+
+        {/* No Results Message */}
+        <div className="glass-card p-12 text-center">
+          <Search className="w-16 h-16 mx-auto mb-6 text-muted-foreground/50" />
+          <h3 className="text-xl font-semibold mb-2">No Privacy Data Found</h3>
+          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            We couldn't find any publicly available information about "{searchResponse.query}". 
+            This might indicate good privacy practices or the person may not have a significant online presence.
+          </p>
+          <div className="text-sm text-muted-foreground">
+            <p>Try searching with:</p>
+            <ul className="mt-2 space-y-1">
+              <li>• Full name with middle initial</li>
+              <li>• Professional email address</li>
+              <li>• Social media usernames</li>
+              <li>• Alternative name spellings</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Search Summary */}
@@ -147,7 +198,7 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
           </div>
           <div className="flex items-center gap-2">
             <Globe className="w-4 h-4 text-muted-foreground" />
-            <span>Total Results: <span className="font-medium">{searchResponse.total_results}</span></span>
+            <span>Total Results: <span className="font-medium">{searchResponse.results.length}</span></span>
           </div>
           <div className="flex items-center gap-2">
             <Users className="w-4 h-4 text-muted-foreground" />
@@ -160,7 +211,7 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
       <ResultsFilters results={searchResponse.results} onFilterChange={setFilters} />
 
       {/* Selection Controls */}
-      <SelectionControls results={currentResults} totalCount={searchResponse.total_results} />
+      <SelectionControls results={currentResults} totalCount={searchResponse.results.length} />
 
       {/* Categorized Results */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

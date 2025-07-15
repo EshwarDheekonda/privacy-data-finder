@@ -73,7 +73,7 @@ const Results = () => {
 
     const shareData = {
       title: `Privacy Assessment Results for ${searchResponse.query}`,
-      text: `Found ${searchResponse.total_results} privacy-related results for ${searchResponse.query}`,
+      text: `Found ${searchResponse.results?.length || 0} privacy-related results for ${searchResponse.query}`,
       url: window.location.href,
     };
 

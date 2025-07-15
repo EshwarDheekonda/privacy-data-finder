@@ -129,7 +129,7 @@ export const transformApiResponse = (rawResponse: RawApiResponse): SearchRespons
 
   return {
     query: rawResponse.query,
-    total_results: expectedTotal, // Use combined backend count for UI consistency
+    total_results: actualTotal, // Use actual processed count for UI consistency
     scan_time: 0,
     timestamp: new Date().toISOString(),
     results: allResults,
