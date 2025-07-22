@@ -5,6 +5,7 @@ import { SearchResult, SearchResponse } from '@/lib/api';
 import { ResultCard } from './ResultCard';
 import { SelectionControls } from './SelectionControls';
 import { ResultsFilters, FilterState } from './ResultsFilters';
+import { FloatingExtractButton } from './FloatingExtractButton';
 import { Globe, Users, Search } from 'lucide-react';
 
 interface ResultsDisplayProps {
@@ -216,7 +217,6 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
       <SelectionControls 
         results={currentResults} 
         totalCount={searchResponse.results.length}
-        searchQuery={searchResponse.query}
       />
 
       {/* Categorized Results */}
@@ -287,6 +287,12 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Floating Extract Details Button */}
+      <FloatingExtractButton 
+        searchQuery={searchResponse.query}
+        allResults={searchResponse.results || []}
+      />
     </div>
   );
 };
