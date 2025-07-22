@@ -351,6 +351,76 @@ export const searchApi = {
       );
     }
   },
+
+  /**
+   * Extract detailed information for selected URLs
+   */
+  async extractDetails(searchName: string, selectedUrls: string[]): Promise<void> {
+    if (!searchName.trim()) {
+      throw new SearchApiError('Search name cannot be empty');
+    }
+
+    if (!selectedUrls || selectedUrls.length === 0) {
+      throw new SearchApiError('No URLs selected for extraction');
+    }
+
+    try {
+      const url = new URL('/extract', API_BASE_URL);
+      
+      console.log('Sending extract request:', {
+        searchName: searchName.trim(),
+        selectedUrls,
+        urlCount: selectedUrls.length
+      });
+
+      const response = await fetch(url.toString(), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          searchName: searchName.trim(),
+          selectedUrls: selectedUrls
+        }),
+      });
+
+      console.log('Extract API Response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Extract API Error response:', errorData);
+        throw new SearchApiError(
+          errorData.message || `HTTP ${response.status}: ${response.statusText}`,
+          errorData.code || `HTTP_${response.status}`,
+          errorData
+        );
+      }
+
+      // For now, we just log success. The backend might return additional data in the future.
+      const responseData = await response.json().catch(() => ({}));
+      console.log('Extract request completed successfully:', responseData);
+      
+    } catch (error) {
+      if (error instanceof SearchApiError) {
+        throw error;
+      }
+
+      // Handle network errors
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new SearchApiError(
+          'Unable to connect to the extraction service. Please check your internet connection and try again.',
+          'NETWORK_ERROR'
+        );
+      }
+
+      // Handle other errors
+      throw new SearchApiError(
+        'An unexpected error occurred during extraction. Please try again.',
+        'UNKNOWN_ERROR',
+        error
+      );
+    }
+  },
 };
 
 // Utility function for handling API errors with toast notifications

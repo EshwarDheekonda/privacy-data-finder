@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { SearchResult } from '@/lib/api';
 
@@ -8,6 +9,7 @@ interface ResultsContextType {
   deselectAll: () => void;
   isSelected: (id: string) => boolean;
   selectedCount: number;
+  getSelectedResults: (allResults: SearchResult[]) => SearchResult[];
 }
 
 const ResultsContext = createContext<ResultsContextType | undefined>(undefined);
@@ -53,6 +55,10 @@ export const ResultsProvider = ({ children }: ResultsProviderProps) => {
 
   const selectedCount = selectedResults.size;
 
+  const getSelectedResults = (allResults: SearchResult[]): SearchResult[] => {
+    return allResults.filter(result => selectedResults.has(result.id));
+  };
+
   return (
     <ResultsContext.Provider
       value={{
@@ -62,6 +68,7 @@ export const ResultsProvider = ({ children }: ResultsProviderProps) => {
         deselectAll,
         isSelected,
         selectedCount,
+        getSelectedResults,
       }}
     >
       {children}

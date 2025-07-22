@@ -213,7 +213,11 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
       <ResultsFilters results={searchResponse.results} onFilterChange={setFilters} />
 
       {/* Selection Controls */}
-      <SelectionControls results={currentResults} totalCount={searchResponse.results.length} />
+      <SelectionControls 
+        results={currentResults} 
+        totalCount={searchResponse.results.length}
+        searchQuery={searchResponse.query}
+      />
 
       {/* Categorized Results */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
