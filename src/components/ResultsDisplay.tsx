@@ -5,7 +5,7 @@ import { SearchResult, SearchResponse } from '@/lib/api';
 import { ResultCard } from './ResultCard';
 import { SelectionControls } from './SelectionControls';
 import { ResultsFilters, FilterState } from './ResultsFilters';
-import { FloatingExtractButton } from './FloatingExtractButton';
+import { ExtractDetailsSection } from './ExtractDetailsSection';
 import { Globe, Users, Search } from 'lucide-react';
 
 interface ResultsDisplayProps {
@@ -288,8 +288,8 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
         </TabsContent>
       </Tabs>
 
-      {/* Floating Extract Details Button */}
-      <FloatingExtractButton 
+      {/* Large Extract Details Button at End of Page */}
+      <ExtractDetailsSection 
         searchQuery={searchResponse.query}
         allResults={searchResponse.results || []}
       />
