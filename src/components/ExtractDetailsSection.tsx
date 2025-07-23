@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useResults } from '@/contexts/ResultsContext';
@@ -15,6 +16,7 @@ export const ExtractDetailsSection = ({ searchQuery, allResults }: ExtractDetail
   const { selectedCount, getSelectedResults } = useResults();
   const [isExtracting, setIsExtracting] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const navigate = useNavigate();
 
   const handleExtractDetails = async () => {
     if (selectedCount === 0) {
@@ -41,8 +43,16 @@ export const ExtractDetailsSection = ({ searchQuery, allResults }: ExtractDetail
       await searchApi.extractDetails(searchQuery, selectedUrls);
 
       toast({
-        title: 'Extraction Started',
-        description: `Processing ${selectedCount} selected result${selectedCount > 1 ? 's' : ''} for detailed extraction.`,
+        title: 'Analysis Complete',
+        description: `Processing completed for ${selectedCount} selected result${selectedCount > 1 ? 's' : ''}.`,
+      });
+
+      // Navigate to detailed results page
+      navigate('/detailed-results', {
+        state: {
+          query: searchQuery,
+          selectedResults: selectedResults
+        }
       });
 
     } catch (error) {
