@@ -211,12 +211,12 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
           </p>
 
           {/* Premium Search Bar - Enhanced with refined polish */}
-          <div id="assessment" className="max-w-3xl mx-auto mb-12 animate-scale-in relative z-30 group" style={{ animationDelay: '0.8s' }}>
-            <div className="vibrant-search-container p-3 flex gap-3 pointer-events-auto relative overflow-hidden">
+          <div id="assessment" className="max-w-3xl mx-auto mb-8 animate-scale-in relative z-30 group" style={{ animationDelay: '0.8s' }}>
+            <div className="vibrant-search-container p-3 pointer-events-auto relative overflow-hidden">
               {/* Enhanced background glow effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-blue-500/5 to-purple-500/5 rounded-2xl blur-xl scale-110 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out"></div>
               
-              <div className="flex-1 relative">
+              <div className="relative">
                 {/* Enhanced search icon with premium micro-animation */}
                 <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-purple-300 w-6 h-6 pointer-events-none transition-all duration-300 ease-out group-hover:text-purple-200 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.6)] group-focus-within:text-purple-100 group-focus-within:scale-110 group-focus-within:drop-shadow-[0_0_12px_rgba(168,85,247,0.8)]" style={{ filter: 'drop-shadow(0 0 4px rgba(168, 85, 247, 0.3))' }} />
                 
@@ -258,42 +258,6 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
                   <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-purple-400/10 to-transparent animate-pulse pointer-events-none"></div>
                 )}
               </div>
-              
-              {/* Enhanced premium button with refined hover states */}
-              <Button 
-                onClick={handleSearch}
-                variant="ghost"
-                className="vibrant-button h-16 px-10 text-lg font-bold rounded-lg text-white transition-all duration-500 ease-out transform hover:scale-105 hover:shadow-xl hover:shadow-purple-500/30 active:scale-95 group/button relative overflow-hidden"
-                disabled={!searchQuery.trim() || isLoading}
-                style={{ 
-                  textShadow: '0 2px 8px rgba(168, 85, 247, 0.6), 0 0 20px rgba(168, 85, 247, 0.3)',
-                }}
-                aria-label={isLoading ? 'Scanning in progress' : 'Start privacy risk assessment'}
-                role="button"
-                type="button"
-              >
-                {/* Button text glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover/button:translate-x-[100%] transition-transform duration-1000 ease-out"></div>
-                
-                {isLoading ? (
-                  <div className="flex items-center relative z-10">
-                    <Loader className="w-6 h-6 mr-3 animate-spin text-white drop-shadow-lg" />
-                    <span className="animate-pulse font-semibold text-white" style={{ textShadow: '0 0 15px rgba(255, 255, 255, 0.8)' }}>
-                      Scanning...
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex items-center relative z-10">
-                    <Zap className="w-6 h-6 mr-3 text-white transition-all duration-300 group-hover/button:animate-bounce group-hover/button:text-yellow-200 group-hover/button:drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" />
-                    <span className="group-hover/button:tracking-wide transition-all duration-300 font-bold text-white" 
-                          style={{ 
-                            textShadow: '0 2px 8px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.5), 0 0 30px rgba(255, 255, 255, 0.3)'
-                          }}>
-                      ⚡ Start Assessment
-                    </span>
-                  </div>
-                )}
-              </Button>
             </div>
             
             {/* Subtle bottom glow enhancement */}
@@ -303,6 +267,44 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
             <div id="search-description" className="mt-3 text-sm text-violet-200/70 max-w-2xl mx-auto leading-relaxed">
               Our AI scans public databases, social media, and data broker sites to reveal your digital privacy risks
             </div>
+          </div>
+
+          {/* Separate Start Assessment Button */}
+          <div className="max-w-lg mx-auto mb-12 animate-scale-in relative z-30" style={{ animationDelay: '1s' }}>
+            <Button 
+              onClick={handleSearch}
+              variant="ghost"
+              className="vibrant-button w-full h-16 px-10 text-lg font-bold rounded-lg text-white transition-all duration-500 ease-out transform hover:scale-105 hover:shadow-xl hover:shadow-purple-500/30 active:scale-95 group/button relative overflow-hidden"
+              disabled={!searchQuery.trim() || isLoading}
+              style={{ 
+                textShadow: '0 2px 8px rgba(168, 85, 247, 0.6), 0 0 20px rgba(168, 85, 247, 0.3)',
+              }}
+              aria-label={isLoading ? 'Scanning in progress' : 'Start privacy risk assessment'}
+              role="button"
+              type="button"
+            >
+              {/* Button text glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover/button:translate-x-[100%] transition-transform duration-1000 ease-out"></div>
+              
+              {isLoading ? (
+                <div className="flex items-center justify-center relative z-10">
+                  <Loader className="w-6 h-6 mr-3 animate-spin text-white drop-shadow-lg" />
+                  <span className="animate-pulse font-semibold text-white" style={{ textShadow: '0 0 15px rgba(255, 255, 255, 0.8)' }}>
+                    Scanning...
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center relative z-10">
+                  <Zap className="w-6 h-6 mr-3 text-white transition-all duration-300 group-hover/button:animate-bounce group-hover/button:text-yellow-200 group-hover/button:drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" />
+                  <span className="group-hover/button:tracking-wide transition-all duration-300 font-bold text-white" 
+                        style={{ 
+                          textShadow: '0 2px 8px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.5), 0 0 30px rgba(255, 255, 255, 0.3)'
+                        }}>
+                    ⚡ Start Assessment
+                  </span>
+                </div>
+              )}
+            </Button>
           </div>
 
           {/* Enhanced Loading Status */}
