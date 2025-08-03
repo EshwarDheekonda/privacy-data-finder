@@ -237,6 +237,7 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
               </div>
                <Button 
                 onClick={handleSearch}
+                variant="ghost"
                 className="vibrant-button h-16 px-10 text-lg font-bold rounded-lg text-white transition-all duration-500 ease-out"
                 disabled={!searchQuery.trim() || isLoading}
               >
