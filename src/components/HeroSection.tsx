@@ -210,20 +210,33 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
             from our enterprise-grade security platform.
           </p>
 
-          {/* Vibrant Search Bar - Always interactive */}
-          <div id="assessment" className="max-w-3xl mx-auto mb-12 animate-scale-in relative z-30" style={{ animationDelay: '0.8s' }}>
-            <div className="vibrant-search-container p-3 flex gap-3 pointer-events-auto">
+          {/* Premium Search Bar - Enhanced with refined polish */}
+          <div id="assessment" className="max-w-3xl mx-auto mb-12 animate-scale-in relative z-30 group" style={{ animationDelay: '0.8s' }}>
+            <div className="vibrant-search-container p-3 flex gap-3 pointer-events-auto relative overflow-hidden">
+              {/* Enhanced background glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-blue-500/5 to-purple-500/5 rounded-2xl blur-xl scale-110 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out"></div>
+              
               <div className="flex-1 relative">
-                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-purple-300 w-6 h-6 pointer-events-none animate-pulse" />
+                {/* Enhanced search icon with micro-animation */}
+                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-purple-300 w-6 h-6 pointer-events-none transition-all duration-300 ease-out group-hover:text-purple-200 group-hover:scale-110" />
+                
+                {/* Premium input with enhanced focus states */}
                 <Input
                   ref={searchInputRef}
                   placeholder="Enter a full name to assess privacy risk..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="vibrant-search-input pl-14 text-lg h-16 rounded-lg cursor-text relative z-10 text-white placeholder:text-purple-200/70"
+                  className="vibrant-search-input pl-14 text-lg h-16 rounded-lg cursor-text relative z-10 text-white placeholder:text-purple-200/70 transition-all duration-300 ease-out focus:shadow-lg focus:shadow-purple-500/20 focus:scale-[1.02] focus:placeholder:text-purple-200/90"
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  onFocus={() => console.log('Input focused')}
-                  onBlur={() => console.log('Input blurred')}
+                  onFocus={(e) => {
+                    console.log('Input focused');
+                    e.target.style.transform = 'scale(1.02)';
+                    e.target.style.transition = 'all 300ms ease-out';
+                  }}
+                  onBlur={(e) => {
+                    console.log('Input blurred');
+                    e.target.style.transform = 'scale(1)';
+                  }}
                   onClick={(e) => {
                     e.stopPropagation();
                     console.log('Input clicked - event:', e);
@@ -234,21 +247,36 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
                   autoComplete="off"
                   style={{ pointerEvents: 'all' }}
                 />
+                
+                {/* Subtle typing indicator glow */}
+                {searchQuery && (
+                  <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-purple-400/10 to-transparent animate-pulse pointer-events-none"></div>
+                )}
               </div>
-               <Button 
+              
+              {/* Enhanced premium button with refined hover states */}
+              <Button 
                 onClick={handleSearch}
                 variant="ghost"
-                className="vibrant-button h-16 px-10 text-lg font-bold rounded-lg text-white transition-all duration-500 ease-out"
+                className="vibrant-button h-16 px-10 text-lg font-bold rounded-lg text-white transition-all duration-500 ease-out transform hover:scale-105 hover:shadow-xl hover:shadow-purple-500/30 active:scale-95 group/button"
                 disabled={!searchQuery.trim() || isLoading}
               >
                 {isLoading ? (
-                  <Loader className="w-6 h-6 mr-3 animate-spin text-white" />
+                  <div className="flex items-center">
+                    <Loader className="w-6 h-6 mr-3 animate-spin text-white" />
+                    <span className="animate-pulse">Scanning...</span>
+                  </div>
                 ) : (
-                  <Zap className="w-6 h-6 mr-3 text-white animate-pulse" />
+                  <div className="flex items-center">
+                    <Zap className="w-6 h-6 mr-3 text-white transition-all duration-300 group-hover/button:animate-bounce group-hover/button:text-yellow-200" />
+                    <span className="group-hover/button:tracking-wide transition-all duration-300">Start Assessment</span>
+                  </div>
                 )}
-                {isLoading ? 'Scanning...' : 'Start Assessment'}
               </Button>
             </div>
+            
+            {/* Subtle bottom glow enhancement */}
+            <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-3/4 h-8 bg-gradient-to-r from-transparent via-purple-500/10 to-transparent rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out"></div>
           </div>
 
           {/* Enhanced Loading Status */}
