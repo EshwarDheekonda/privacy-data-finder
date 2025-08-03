@@ -223,19 +223,21 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
                 {/* Premium input with enhanced focus states */}
                 <Input
                   ref={searchInputRef}
-                  placeholder="Enter a full name to assess privacy risk..."
+                  placeholder="✨ Enter a full name to discover hidden privacy risks..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="vibrant-search-input pl-14 text-lg h-16 rounded-lg cursor-text relative z-10 text-white placeholder:text-purple-200/70 transition-all duration-300 ease-out focus:shadow-lg focus:shadow-purple-500/20 focus:scale-[1.02] focus:placeholder:text-purple-200/90"
+                  className="vibrant-search-input pl-14 text-lg h-16 rounded-lg cursor-text relative z-10 text-white font-medium placeholder:text-violet-200/80 placeholder:font-normal placeholder:italic transition-all duration-300 ease-out focus:shadow-lg focus:shadow-purple-500/25 focus:scale-[1.02] focus:placeholder:text-violet-100/95 focus:text-white focus:font-semibold hover:placeholder:text-violet-100/90"
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                   onFocus={(e) => {
                     console.log('Input focused');
                     e.target.style.transform = 'scale(1.02)';
                     e.target.style.transition = 'all 300ms ease-out';
+                    e.target.style.textShadow = '0 0 10px rgba(168, 85, 247, 0.4)';
                   }}
                   onBlur={(e) => {
                     console.log('Input blurred');
                     e.target.style.transform = 'scale(1)';
+                    e.target.style.textShadow = 'none';
                   }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -258,18 +260,32 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
               <Button 
                 onClick={handleSearch}
                 variant="ghost"
-                className="vibrant-button h-16 px-10 text-lg font-bold rounded-lg text-white transition-all duration-500 ease-out transform hover:scale-105 hover:shadow-xl hover:shadow-purple-500/30 active:scale-95 group/button"
+                className="vibrant-button h-16 px-10 text-lg font-bold rounded-lg text-white transition-all duration-500 ease-out transform hover:scale-105 hover:shadow-xl hover:shadow-purple-500/30 active:scale-95 group/button relative overflow-hidden"
                 disabled={!searchQuery.trim() || isLoading}
+                style={{ 
+                  textShadow: '0 2px 8px rgba(168, 85, 247, 0.6), 0 0 20px rgba(168, 85, 247, 0.3)',
+                }}
               >
+                {/* Button text glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover/button:translate-x-[100%] transition-transform duration-1000 ease-out"></div>
+                
                 {isLoading ? (
-                  <div className="flex items-center">
-                    <Loader className="w-6 h-6 mr-3 animate-spin text-white" />
-                    <span className="animate-pulse">Scanning...</span>
+                  <div className="flex items-center relative z-10">
+                    <Loader className="w-6 h-6 mr-3 animate-spin text-white drop-shadow-lg" />
+                    <span className="animate-pulse font-semibold text-white" style={{ textShadow: '0 0 15px rgba(255, 255, 255, 0.8)' }}>
+                      Scanning...
+                    </span>
                   </div>
                 ) : (
-                  <div className="flex items-center">
-                    <Zap className="w-6 h-6 mr-3 text-white transition-all duration-300 group-hover/button:animate-bounce group-hover/button:text-yellow-200" />
-                    <span className="group-hover/button:tracking-wide transition-all duration-300">Start Assessment</span>
+                  <div className="flex items-center relative z-10">
+                    <Zap className="w-6 h-6 mr-3 text-white transition-all duration-300 group-hover/button:animate-bounce group-hover/button:text-yellow-200 group-hover/button:drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" />
+                    <span className="group-hover/button:tracking-wide transition-all duration-300 font-bold text-white group-hover/button:text-shadow-[0_0_15px_rgba(255,255,255,0.9)]" 
+                          style={{ 
+                            textShadow: '0 2px 8px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.4)',
+                            filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.3))'
+                          }}>
+                      ⚡ Start Assessment
+                    </span>
                   </div>
                 )}
               </Button>
