@@ -217,8 +217,8 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-blue-500/5 to-purple-500/5 rounded-2xl blur-xl scale-110 opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out"></div>
               
               <div className="flex-1 relative">
-                {/* Enhanced search icon with micro-animation */}
-                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-purple-300 w-6 h-6 pointer-events-none transition-all duration-300 ease-out group-hover:text-purple-200 group-hover:scale-110" />
+                {/* Enhanced search icon with premium micro-animation */}
+                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-purple-300 w-6 h-6 pointer-events-none transition-all duration-300 ease-out group-hover:text-purple-200 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(168,85,247,0.6)] group-focus-within:text-purple-100 group-focus-within:scale-110 group-focus-within:drop-shadow-[0_0_12px_rgba(168,85,247,0.8)]" style={{ filter: 'drop-shadow(0 0 4px rgba(168, 85, 247, 0.3))' }} />
                 
                 {/* Premium input with enhanced focus states */}
                 <Input
@@ -248,6 +248,9 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
                   }}
                   autoComplete="off"
                   style={{ pointerEvents: 'all' }}
+                  aria-label="Enter full name for privacy risk assessment"
+                  role="searchbox"
+                  aria-describedby="search-description"
                 />
                 
                 {/* Subtle typing indicator glow */}
@@ -265,6 +268,9 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
                 style={{ 
                   textShadow: '0 2px 8px rgba(168, 85, 247, 0.6), 0 0 20px rgba(168, 85, 247, 0.3)',
                 }}
+                aria-label={isLoading ? 'Scanning in progress' : 'Start privacy risk assessment'}
+                role="button"
+                type="button"
               >
                 {/* Button text glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover/button:translate-x-[100%] transition-transform duration-1000 ease-out"></div>
@@ -293,6 +299,11 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
             
             {/* Subtle bottom glow enhancement */}
             <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-3/4 h-8 bg-gradient-to-r from-transparent via-purple-500/10 to-transparent rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out"></div>
+            
+            {/* Screen reader description */}
+            <div id="search-description" className="sr-only">
+              Enter a person's full name to assess their digital privacy risk and exposure across the internet. Our AI-powered platform scans public databases, social media, and data broker sites to provide comprehensive privacy insights.
+            </div>
           </div>
 
           {/* Enhanced Loading Status */}
