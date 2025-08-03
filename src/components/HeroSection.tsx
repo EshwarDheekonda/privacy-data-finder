@@ -7,6 +7,7 @@ import { searchApi, handleApiError, SearchResponse, SearchApiError } from '@/lib
 import { useCounter } from '@/contexts/CounterContext';
 import { AnimatedCounter } from '@/components/AnimatedCounter';
 import { ParticleSystem } from '@/components/ParticleSystem';
+import { RotatingShieldHero } from '@/components/RotatingShieldHero';
 import { useNavigate } from 'react-router-dom';
 import heroImage from '@/assets/hero-privacy.jpg';
 
@@ -14,6 +15,7 @@ export const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [showMainContent, setShowMainContent] = useState(false);
   const { count, incrementCounter } = useCounter();
   const navigate = useNavigate();
 
@@ -94,9 +96,16 @@ export const HeroSection = () => {
         <div className="animate-depth-float absolute top-1/3 left-10 w-8 h-8 bg-danger/25 rounded-full opacity-30 blur-sm" style={{ animationDelay: '3s' }}></div>
       </div>
 
+      {/* Rotating Shield Hero Animation */}
+      {!showMainContent && (
+        <div className="absolute inset-0 z-50 bg-background/95">
+          <RotatingShieldHero onAnimationComplete={() => setShowMainContent(true)} />
+        </div>
+      )}
+
       {/* Main Content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-        <div className="animate-slide-up">
+      <div className={`relative z-10 max-w-6xl mx-auto px-6 text-center transition-all duration-1000 ${showMainContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`${showMainContent ? 'animate-slide-up' : ''}`}>
           {/* Enhanced Badge */}
           <div className="inline-flex items-center gap-2 depth-card px-6 py-3 mb-8 text-sm font-medium interactive-glow">
             <Shield className="w-5 h-5 text-secondary animate-pulse-glow" />
