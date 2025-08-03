@@ -25,6 +25,8 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const focusSearchInput = () => {
+    console.log('focusSearchInput called'); // Debug log
+    
     // First scroll to the assessment section
     const assessmentElement = document.getElementById('assessment');
     if (assessmentElement) {
@@ -34,12 +36,19 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
       });
     }
     
-    // Focus the input after a brief delay to ensure scroll completes
+    // Simplified focus with shorter delay
     setTimeout(() => {
+      console.log('Attempting to focus input:', searchInputRef.current); // Debug log
       if (searchInputRef.current) {
-        searchInputRef.current.focus();
+        try {
+          searchInputRef.current.focus();
+          searchInputRef.current.click(); // Fallback to ensure cursor appears
+          console.log('Input focused successfully'); // Debug log
+        } catch (error) {
+          console.error('Error focusing input:', error);
+        }
       }
-    }, 800); // Delay to allow scroll animation to complete
+    }, 500); // Reduced delay
   };
 
   useImperativeHandle(ref, () => ({
@@ -170,8 +179,15 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
                   placeholder="Enter a full name to assess privacy risk..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-14 bg-surface-interactive border-none text-lg h-16 focus:ring-2 focus:ring-primary-glow rounded-lg"
+                  className="pl-14 bg-surface-interactive border-none text-lg h-16 focus:ring-2 focus:ring-primary-glow rounded-lg cursor-text"
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  onClick={() => {
+                    console.log('Input clicked'); // Debug log
+                    if (searchInputRef.current) {
+                      searchInputRef.current.focus();
+                    }
+                  }}
+                  autoComplete="off"
                 />
               </div>
                <Button 
