@@ -20,35 +20,39 @@ export const CameraController = ({ phase }: CameraControllerProps) => {
   useFrame((state) => {
     const time = state.clock.elapsedTime;
 
-    // Phase-based camera movements
+    // Phase-based camera movements optimized for shield positioning
     switch (phase) {
       case 'intro':
-        // Camera zooms in dramatically
-        targetPosition.current.set(0, 0, 8 - Math.min(time * 2, 3));
+        // Start from left side looking at right-positioned shield
+        targetPosition.current.set(-1, 0, 8 - Math.min(time * 2, 3));
+        targetLookAt.current.set(2, 0, 0);
         break;
 
       case 'shield-reveal':
-        // Gentle orbital movement
-        const radius = 5;
+        // Position camera to frame both shield and text area
+        const radius = 6;
         targetPosition.current.set(
-          Math.sin(time * 0.2) * 0.5,
-          Math.cos(time * 0.15) * 0.3,
+          0.5 + Math.sin(time * 0.2) * 0.3,
+          Math.cos(time * 0.15) * 0.2,
           radius
         );
+        targetLookAt.current.set(1.5, -0.2, 0);
         break;
 
       case 'text-appear':
-        // Pull back slightly for text visibility
-        targetPosition.current.set(0, 0.5, 6);
+        // Pull back and center for optimal text/shield viewing
+        targetPosition.current.set(0.3, 0.3, 7);
+        targetLookAt.current.set(1, -0.1, 0);
         break;
 
       case 'complete':
-        // Subtle floating movement
+        // Balanced view of text and shield with subtle movement
         targetPosition.current.set(
-          Math.sin(time * 0.1) * 0.2,
-          Math.cos(time * 0.08) * 0.1,
-          5.5
+          0.2 + Math.sin(time * 0.1) * 0.15,
+          0.2 + Math.cos(time * 0.08) * 0.1,
+          6.5
         );
+        targetLookAt.current.set(1.2, -0.2, 0);
         break;
     }
 

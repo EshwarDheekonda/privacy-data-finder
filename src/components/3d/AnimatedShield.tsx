@@ -21,18 +21,20 @@ export const AnimatedShield = ({ phase }: AnimatedShieldProps) => {
     groupRef.current.rotation.y = Math.sin(time * 0.3) * 0.1;
     groupRef.current.rotation.x = Math.cos(time * 0.2) * 0.05;
 
-    // Phase-based animations
+    // Phase-based animations with spatial separation from text area
     switch (phase) {
       case 'intro':
-        // Scale from 0 to full size
+        // Scale from 0 to full size, positioned right to avoid text collision
         const introScale = Math.min(time * 0.8, 1);
         groupRef.current.scale.setScalar(introScale);
+        groupRef.current.position.set(2, 0, 0);
         groupRef.current.rotation.z = (1 - introScale) * Math.PI * 2;
         break;
 
       case 'shield-reveal':
-        // Gentle floating and rotation
-        groupRef.current.position.y = Math.sin(time * 1.5) * 0.1;
+        // Position shield to the right side, away from center text
+        groupRef.current.position.set(1.8, -0.3, 0);
+        groupRef.current.position.y += Math.sin(time * 1.5) * 0.1;
         groupRef.current.rotation.z = Math.sin(time * 0.5) * 0.1;
         
         // Pulsing glow effect
@@ -43,14 +45,21 @@ export const AnimatedShield = ({ phase }: AnimatedShieldProps) => {
         break;
 
       case 'text-appear':
-        // More dynamic movement
-        groupRef.current.position.y = Math.sin(time * 2) * 0.15;
+        // Move further right to give text full visibility
+        groupRef.current.position.set(2.5, -0.5, 0.5);
+        groupRef.current.position.y += Math.sin(time * 2) * 0.15;
         groupRef.current.rotation.z = Math.sin(time * 0.8) * 0.15;
         break;
 
       case 'complete':
-        // Subtle idle animation
-        groupRef.current.position.y = Math.sin(time * 0.8) * 0.08;
+        // Final position with subtle animation, well clear of text
+        const baseX = 2.3;
+        const baseY = -0.4;
+        groupRef.current.position.set(
+          baseX + Math.sin(time * 0.8) * 0.1,
+          baseY + Math.sin(time * 0.8) * 0.08,
+          0.3
+        );
         groupRef.current.rotation.z = Math.sin(time * 0.3) * 0.05;
         break;
     }

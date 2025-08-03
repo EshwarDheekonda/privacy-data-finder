@@ -85,28 +85,27 @@ export const Hero3D = ({ onAnimationComplete }: Hero3DProps) => {
     };
   }, [onAnimationComplete, checkWebGLSupport]);
 
-  // CSS Fallback Component
+  // CSS Fallback Component with consistent layout
   const CSSFallback = () => (
     <div className="relative w-full h-screen overflow-hidden bg-gradient-to-br from-background via-background/90 to-primary/5">
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="text-center space-y-8">
-          <div className="relative">
-            <div className="w-32 h-32 mx-auto bg-gradient-to-br from-primary to-primary/60 rounded-full animate-pulse flex items-center justify-center">
-              <span className="text-4xl">🛡️</span>
-            </div>
-            <div className="absolute inset-0 w-32 h-32 mx-auto border-4 border-primary/30 rounded-full animate-spin" style={{ animationDuration: '3s' }} />
+      <div className="max-w-4xl mx-auto h-full flex items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full px-8 md:px-16">
+          {/* Text Content */}
+          <div className="space-y-4 order-2 md:order-1">
+            <HeroText phase={animationPhase} />
           </div>
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Privacy Shield
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Advanced PII Risk Assessment Tool
-            </p>
+          
+          {/* Shield Animation */}
+          <div className="flex items-center justify-center order-1 md:order-2">
+            <div className="relative">
+              <div className="w-32 h-32 bg-gradient-to-br from-primary to-primary/60 rounded-full animate-pulse flex items-center justify-center">
+                <span className="text-4xl">🛡️</span>
+              </div>
+              <div className="absolute inset-0 w-32 h-32 border-4 border-primary/30 rounded-full animate-spin" style={{ animationDuration: '3s' }} />
+            </div>
           </div>
         </div>
       </div>
-      <HeroText phase={animationPhase} />
     </div>
   );
 
@@ -157,12 +156,18 @@ export const Hero3D = ({ onAnimationComplete }: Hero3DProps) => {
         </Canvas>
       </ErrorBoundary>
 
-      {/* HTML Overlay for Text */}
-      <HeroText phase={animationPhase} />
+      {/* HTML Overlay for Text - Positioned to avoid 3D collision */}
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        <div className="max-w-4xl mx-auto h-full flex items-center justify-start pl-8 md:pl-16">
+          <div className="w-full md:w-2/3 pointer-events-auto">
+            <HeroText phase={animationPhase} />
+          </div>
+        </div>
+      </div>
 
       {/* Background Gradient Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-gradient-radial from-primary/20 to-transparent opacity-60 animate-pulse" />
+        <div className="absolute top-0 left-0 w-1/3 h-1/2 bg-gradient-radial from-primary/20 to-transparent opacity-60 animate-pulse" />
         <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-gradient-radial from-secondary/20 to-transparent opacity-40 animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
     </div>
