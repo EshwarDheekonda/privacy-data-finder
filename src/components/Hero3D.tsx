@@ -3,6 +3,7 @@ import { Suspense, useState, useEffect, useCallback } from 'react';
 import { AnimatedShield } from './3d/AnimatedShield';
 import { ParticleField } from './3d/ParticleField';
 import { HeroText } from './3d/HeroTextFixed';
+import { Hero3DText } from './3d/Hero3DText';
 import { FloatingElements } from './3d/FloatingElements';
 import { CameraController } from './3d/CameraController';
 import { ErrorBoundary } from './3d/ErrorBoundary';
@@ -153,12 +154,13 @@ export const Hero3D = ({ onAnimationComplete }: Hero3DProps) => {
             <AnimatedShield phase={animationPhase} />
             <ParticleField phase={animationPhase} />
             <FloatingElements phase={animationPhase} />
+            <Hero3DText position={[-2, 0, 0]} scale={0.6} />
           </Suspense>
         </Canvas>
       </ErrorBoundary>
 
-      {/* HTML Overlay for Text - Non-interactive */}
-      <div className="absolute inset-0 z-10 pointer-events-none">
+      {/* Reduced HTML Text Overlay - keeping minimal for fallback */}
+      <div className="absolute inset-0 z-10 pointer-events-none opacity-20">
         <div className="max-w-4xl mx-auto h-full flex items-center justify-start pl-8 md:pl-16">
           <div className="w-full md:w-2/3 pointer-events-none">
             <HeroText phase={animationPhase} />
