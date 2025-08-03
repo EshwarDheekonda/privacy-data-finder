@@ -210,17 +210,17 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
             from our enterprise-grade security platform.
           </p>
 
-          {/* Enhanced Search Bar - Always interactive */}
+          {/* Vibrant Search Bar - Always interactive */}
           <div id="assessment" className="max-w-3xl mx-auto mb-12 animate-scale-in relative z-30" style={{ animationDelay: '0.8s' }}>
-            <div className="depth-card p-3 flex gap-3 interactive-glow pointer-events-auto">
+            <div className="vibrant-search-container p-3 flex gap-3 pointer-events-auto">
               <div className="flex-1 relative">
-                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-muted-foreground w-6 h-6 pointer-events-none" />
+                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-purple-300 w-6 h-6 pointer-events-none animate-pulse" />
                 <Input
                   ref={searchInputRef}
                   placeholder="Enter a full name to assess privacy risk..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-14 bg-surface-interactive border-none text-lg h-16 focus:ring-2 focus:ring-primary-glow rounded-lg cursor-text relative z-10"
+                  className="vibrant-search-input pl-14 text-lg h-16 rounded-lg cursor-text relative z-10 text-white placeholder:text-purple-200/70"
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                   onFocus={() => console.log('Input focused')}
                   onBlur={() => console.log('Input blurred')}
@@ -237,13 +237,13 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
               </div>
                <Button 
                 onClick={handleSearch}
-                className="bg-gradient-primary hover:bg-gradient-to-r hover:from-primary-dark hover:to-primary-light hover:scale-105 transition-all duration-300 h-16 px-10 text-lg font-semibold rounded-lg glow-primary"
+                className="vibrant-button h-16 px-10 text-lg font-bold rounded-lg text-white transition-all duration-500 ease-out"
                 disabled={!searchQuery.trim() || isLoading}
               >
                 {isLoading ? (
-                  <Loader className="w-6 h-6 mr-3 animate-spin" />
+                  <Loader className="w-6 h-6 mr-3 animate-spin text-white" />
                 ) : (
-                  <Zap className="w-6 h-6 mr-3" />
+                  <Zap className="w-6 h-6 mr-3 text-white animate-pulse" />
                 )}
                 {isLoading ? 'Scanning...' : 'Start Assessment'}
               </Button>
