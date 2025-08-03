@@ -13,9 +13,10 @@ export const AnimatedShield = ({ phase }: AnimatedShieldProps) => {
   const glowRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (!groupRef.current || !shieldRef.current || !glowRef.current) return;
+    // Enhanced error checking
+    if (!groupRef.current || !shieldRef.current || !glowRef.current || !state.clock) return;
 
-    const time = state.clock.elapsedTime;
+    const time = state.clock.elapsedTime || 0;
 
     // Base rotation
     groupRef.current.rotation.y = Math.sin(time * 0.3) * 0.1;
@@ -37,10 +38,14 @@ export const AnimatedShield = ({ phase }: AnimatedShieldProps) => {
         groupRef.current.position.y += Math.sin(time * 1.5) * 0.1;
         groupRef.current.rotation.z = Math.sin(time * 0.5) * 0.1;
         
-        // Pulsing glow effect
-        const glowIntensity = 0.5 + Math.sin(time * 3) * 0.3;
-        if (glowRef.current.material instanceof THREE.MeshBasicMaterial) {
-          glowRef.current.material.opacity = glowIntensity;
+        // Pulsing glow effect with error handling
+        try {
+          const glowIntensity = 0.5 + Math.sin(time * 3) * 0.3;
+          if (glowRef.current?.material && glowRef.current.material instanceof THREE.MeshBasicMaterial) {
+            glowRef.current.material.opacity = glowIntensity;
+          }
+        } catch (error) {
+          console.warn('Error updating glow effect:', error);
         }
         break;
 

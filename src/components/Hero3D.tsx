@@ -137,7 +137,8 @@ export const Hero3D = ({ onAnimationComplete }: Hero3DProps) => {
             powerPreference: "high-performance",
             failIfMajorPerformanceCaveat: true
           }}
-          className="absolute inset-0"
+          className="absolute inset-0 pointer-events-none"
+          style={{ pointerEvents: 'none' }}
         >
           <Suspense fallback={null}>
             {/* Lighting Setup */}
@@ -156,10 +157,10 @@ export const Hero3D = ({ onAnimationComplete }: Hero3DProps) => {
         </Canvas>
       </ErrorBoundary>
 
-      {/* HTML Overlay for Text - Positioned to avoid 3D collision */}
+      {/* HTML Overlay for Text - Non-interactive */}
       <div className="absolute inset-0 z-10 pointer-events-none">
         <div className="max-w-4xl mx-auto h-full flex items-center justify-start pl-8 md:pl-16">
-          <div className="w-full md:w-2/3 pointer-events-auto">
+          <div className="w-full md:w-2/3 pointer-events-none">
             <HeroText phase={animationPhase} />
           </div>
         </div>

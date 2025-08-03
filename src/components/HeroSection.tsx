@@ -1,4 +1,4 @@
-import { useState, useRef, useImperativeHandle, forwardRef } from 'react';
+import { useState, useRef, useImperativeHandle, forwardRef, useEffect } from 'react';
 import { Search, Shield, Zap, Eye, Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,12 +20,52 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
   const [showMainContent, setShowMainContent] = useState(false);
+  const [skip3D, setSkip3D] = useState(false);
   const { count, incrementCounter } = useCounter();
   const navigate = useNavigate();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  // Fallback: Show main content if 3D doesn't load within 5 seconds
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!showMainContent) {
+        console.log('3D animation timeout - showing main content');
+        setSkip3D(true);
+        setShowMainContent(true);
+      }
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, [showMainContent]);
+
+  // Check for mobile devices and skip 3D
+  useEffect(() => {
+    const isMobile = window.innerWidth < 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile) {
+      console.log('Mobile device detected - skipping 3D');
+      setSkip3D(true);
+      setShowMainContent(true);
+    }
+
+    // Listen for forced main content display from error boundary
+    const handleForceShowMain = () => {
+      console.log('Received force-show-main-content event');
+      setSkip3D(true);
+      setShowMainContent(true);
+    };
+
+    window.addEventListener('force-show-main-content', handleForceShowMain);
+    return () => window.removeEventListener('force-show-main-content', handleForceShowMain);
+  }, []);
+
   const focusSearchInput = () => {
     console.log('focusSearchInput called'); // Debug log
+    
+    // Skip 3D animation if not already shown
+    if (!showMainContent) {
+      setSkip3D(true);
+      setShowMainContent(true);
+    }
     
     // First scroll to the assessment section
     const assessmentElement = document.getElementById('assessment');
@@ -36,19 +76,20 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
       });
     }
     
-    // Simplified focus with shorter delay
+    // Direct focus without delay if main content is shown
+    const focusDelay = showMainContent ? 100 : 600;
     setTimeout(() => {
       console.log('Attempting to focus input:', searchInputRef.current); // Debug log
       if (searchInputRef.current) {
         try {
           searchInputRef.current.focus();
-          searchInputRef.current.click(); // Fallback to ensure cursor appears
+          searchInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
           console.log('Input focused successfully'); // Debug log
         } catch (error) {
           console.error('Error focusing input:', error);
         }
       }
-    }, 500); // Reduced delay
+    }, focusDelay);
   };
 
   useImperativeHandle(ref, () => ({
@@ -132,15 +173,15 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
         <div className="animate-depth-float absolute top-1/3 left-10 w-8 h-8 bg-danger/25 rounded-full opacity-30 blur-sm" style={{ animationDelay: '3s' }}></div>
       </div>
 
-      {/* 3D Hero Animation */}
-      {!showMainContent && (
-        <div className="absolute inset-0 z-50">
+      {/* 3D Hero Animation - Reduced z-index to avoid blocking UI */}
+      {!showMainContent && !skip3D && (
+        <div className="absolute inset-0 z-5 pointer-events-none">
           <Hero3D onAnimationComplete={() => setShowMainContent(true)} />
         </div>
       )}
 
-      {/* Main Content */}
-      <div className={`relative z-10 max-w-6xl mx-auto px-6 text-center transition-all duration-1000 ${showMainContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      {/* Main Content - Higher z-index to stay above 3D elements */}
+      <div className={`relative z-20 max-w-6xl mx-auto px-6 text-center transition-all duration-1000 ${showMainContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <div className={`${showMainContent ? 'animate-slide-up' : ''}`}>
           {/* Enhanced Badge */}
           <div className="inline-flex items-center gap-2 depth-card px-6 py-3 mb-8 text-sm font-medium interactive-glow">
@@ -169,25 +210,29 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
             from our enterprise-grade security platform.
           </p>
 
-          {/* Enhanced Search Bar */}
-          <div id="assessment" className="max-w-3xl mx-auto mb-12 animate-scale-in" style={{ animationDelay: '0.8s' }}>
-            <div className="depth-card p-3 flex gap-3 interactive-glow">
+          {/* Enhanced Search Bar - Always interactive */}
+          <div id="assessment" className="max-w-3xl mx-auto mb-12 animate-scale-in relative z-30" style={{ animationDelay: '0.8s' }}>
+            <div className="depth-card p-3 flex gap-3 interactive-glow pointer-events-auto">
               <div className="flex-1 relative">
-                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-muted-foreground w-6 h-6" />
+                <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-muted-foreground w-6 h-6 pointer-events-none" />
                 <Input
                   ref={searchInputRef}
                   placeholder="Enter a full name to assess privacy risk..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-14 bg-surface-interactive border-none text-lg h-16 focus:ring-2 focus:ring-primary-glow rounded-lg cursor-text"
+                  className="pl-14 bg-surface-interactive border-none text-lg h-16 focus:ring-2 focus:ring-primary-glow rounded-lg cursor-text relative z-10"
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  onClick={() => {
-                    console.log('Input clicked'); // Debug log
+                  onFocus={() => console.log('Input focused')}
+                  onBlur={() => console.log('Input blurred')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    console.log('Input clicked - event:', e);
                     if (searchInputRef.current) {
                       searchInputRef.current.focus();
                     }
                   }}
                   autoComplete="off"
+                  style={{ pointerEvents: 'all' }}
                 />
               </div>
                <Button 
