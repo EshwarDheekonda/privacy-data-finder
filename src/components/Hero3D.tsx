@@ -154,19 +154,12 @@ export const Hero3D = ({ onAnimationComplete }: Hero3DProps) => {
             <AnimatedShield phase={animationPhase} />
             <ParticleField phase={animationPhase} />
             <FloatingElements phase={animationPhase} />
-            <Hero3DText position={[-2, 0, 0]} scale={0.6} />
+            <Hero3DText position={[-1, 0, 0]} scale={1} />
           </Suspense>
         </Canvas>
       </ErrorBoundary>
 
-      {/* Reduced HTML Text Overlay - keeping minimal for fallback */}
-      <div className="absolute inset-0 z-10 pointer-events-none opacity-20">
-        <div className="max-w-4xl mx-auto h-full flex items-center justify-start pl-8 md:pl-16">
-          <div className="w-full md:w-2/3 pointer-events-none">
-            <HeroText phase={animationPhase} />
-          </div>
-        </div>
-      </div>
+      {/* HTML overlay removed to showcase 3D glass text */}
 
       {/* Background Gradient Effects */}
       <div className="absolute inset-0 pointer-events-none">
