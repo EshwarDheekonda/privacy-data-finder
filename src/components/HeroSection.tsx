@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useImperativeHandle, forwardRef } from 'react';
 import { Search, Shield, Zap, Eye, Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,13 +11,40 @@ import { Hero3D } from '@/components/Hero3D';
 import { useNavigate } from 'react-router-dom';
 import heroImage from '@/assets/hero-privacy.jpg';
 
-export const HeroSection = () => {
+export interface HeroSectionRef {
+  focusSearchInput: () => void;
+}
+
+export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
   const [showMainContent, setShowMainContent] = useState(false);
   const { count, incrementCounter } = useCounter();
   const navigate = useNavigate();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const focusSearchInput = () => {
+    // First scroll to the assessment section
+    const assessmentElement = document.getElementById('assessment');
+    if (assessmentElement) {
+      assessmentElement.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+    }
+    
+    // Focus the input after a brief delay to ensure scroll completes
+    setTimeout(() => {
+      if (searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
+    }, 800); // Delay to allow scroll animation to complete
+  };
+
+  useImperativeHandle(ref, () => ({
+    focusSearchInput
+  }));
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
@@ -139,6 +166,7 @@ export const HeroSection = () => {
               <div className="flex-1 relative">
                 <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-muted-foreground w-6 h-6" />
                 <Input
+                  ref={searchInputRef}
                   placeholder="Enter a full name to assess privacy risk..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -207,4 +235,6 @@ export const HeroSection = () => {
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
     </section>
   );
-};
+});
+
+HeroSection.displayName = 'HeroSection';

@@ -4,7 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
 import { cn } from '@/lib/utils';
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  onGetStartedClick?: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onGetStartedClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -80,12 +84,13 @@ export const Header: React.FC = () => {
               <User className="h-4 w-4 mr-2" />
               Sign In
             </Button>
-            <a 
-              href="#assessment"
-              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90 glow-primary transition-colors"
+            <Button 
+              size="sm"
+              onClick={onGetStartedClick}
+              className="bg-primary hover:bg-primary/90 glow-primary transition-colors"
             >
               Get Started
-            </a>
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -128,12 +133,16 @@ export const Header: React.FC = () => {
                   <User className="h-4 w-4 mr-2" />
                   Sign In
                 </Button>
-                <a 
-                  href="#assessment"
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium h-9 px-3 bg-primary text-primary-foreground hover:bg-primary/90 glow-primary justify-center transition-colors"
+                <Button 
+                  size="sm"
+                  onClick={() => {
+                    onGetStartedClick?.();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="bg-primary hover:bg-primary/90 glow-primary justify-center transition-colors"
                 >
                   Get Started
-                </a>
+                </Button>
               </div>
             </nav>
           </div>
