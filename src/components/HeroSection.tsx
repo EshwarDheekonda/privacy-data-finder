@@ -285,10 +285,9 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
                 ) : (
                   <div className="flex items-center relative z-10">
                     <Zap className="w-6 h-6 mr-3 text-white transition-all duration-300 group-hover/button:animate-bounce group-hover/button:text-yellow-200 group-hover/button:drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" />
-                    <span className="group-hover/button:tracking-wide transition-all duration-300 font-bold text-white group-hover/button:text-shadow-[0_0_15px_rgba(255,255,255,0.9)]" 
+                    <span className="group-hover/button:tracking-wide transition-all duration-300 font-bold text-white" 
                           style={{ 
-                            textShadow: '0 2px 8px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.4)',
-                            filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.3))'
+                            textShadow: '0 2px 8px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.5), 0 0 30px rgba(255, 255, 255, 0.3)'
                           }}>
                       ⚡ Start Assessment
                     </span>
@@ -300,9 +299,9 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
             {/* Subtle bottom glow enhancement */}
             <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-3/4 h-8 bg-gradient-to-r from-transparent via-purple-500/10 to-transparent rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-all duration-700 ease-out"></div>
             
-            {/* Screen reader description */}
-            <div id="search-description" className="sr-only">
-              Enter a person's full name to assess their digital privacy risk and exposure across the internet. Our AI-powered platform scans public databases, social media, and data broker sites to provide comprehensive privacy insights.
+            {/* Visible search description */}
+            <div id="search-description" className="mt-3 text-sm text-violet-200/70 max-w-2xl mx-auto leading-relaxed">
+              Our AI scans public databases, social media, and data broker sites to reveal your digital privacy risks
             </div>
           </div>
 
