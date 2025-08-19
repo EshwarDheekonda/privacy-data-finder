@@ -430,9 +430,11 @@ export default function Auth() {
                               )}
                             </div>
                           </FormControl>
-                          <FormDescription className="text-xs text-muted-foreground">
-                            Username must be 3+ characters. Only letters, numbers, and underscores allowed.
-                          </FormDescription>
+                          {field.value && field.value.length > 0 && (
+                            <FormDescription className="text-xs text-muted-foreground">
+                              Username must be 3+ characters. Only letters, numbers, and underscores allowed.
+                            </FormDescription>
+                          )}
                           {field.value && field.value.length >= 3 && (
                             <>
                               {isAvailable === false && (
