@@ -22,21 +22,16 @@ export const useEmailCheck = (email: string) => {
       setError(null);
 
       try {
-        // Try to sign up with a dummy password to check if email exists
-        const { error: signUpError } = await supabase.auth.signUp({
-          email,
-          password: 'dummy-check-12345',
-          options: {
-            emailRedirectTo: `${window.location.origin}/auth`
-          }
+        // Use the database function to check if email exists
+        const { data, error } = await supabase.rpc('email_exists', {
+          email_input: email
         });
 
-        if (signUpError?.message.includes('already registered') || 
-            signUpError?.message.includes('already taken') ||
-            signUpError?.message.includes('User already registered')) {
-          setEmailExists(true);
+        if (error) {
+          setError('Failed to check email availability');
+          setEmailExists(null);
         } else {
-          setEmailExists(false);
+          setEmailExists(data === true);
         }
       } catch (err) {
         setError('Failed to check email availability');
