@@ -279,8 +279,10 @@ export default function Auth() {
 
     setIsSendingReset(true);
     try {
+      // Add timestamp to make each request unique and force new email generation
+      const timestamp = Date.now();
       const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail, {
-        redirectTo: `${window.location.origin}/auth`,
+        redirectTo: `${window.location.origin}/auth?timestamp=${timestamp}`,
       });
 
       if (error) {
@@ -292,7 +294,7 @@ export default function Auth() {
       } else {
         toast({
           title: 'Password reset email sent!',
-          description: 'Check your email for the password reset link.',
+          description: 'Check your email for the password reset link. A new email has been sent.',
         });
         setShowForgotPassword(false);
         setForgotPasswordEmail('');
