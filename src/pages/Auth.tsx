@@ -169,7 +169,7 @@ export default function Auth() {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-8 max-w-md">
+      <main className="container mx-auto px-4 pt-24 pb-8 max-w-md">{/* Added pt-24 for header space */}
         <Card className="glass-card border-primary/20">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
