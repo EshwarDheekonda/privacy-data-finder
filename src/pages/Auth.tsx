@@ -80,10 +80,22 @@ export default function Auth() {
   const refreshToken = searchParams.get('refresh_token');
   const type = searchParams.get('type');
 
+  // Debug logging
+  useEffect(() => {
+    console.log('URL Search Params:', {
+      reset: searchParams.get('reset'),
+      type: searchParams.get('type'),
+      access_token: accessToken ? 'present' : 'missing',
+      refresh_token: refreshToken ? 'present' : 'missing',
+      all_params: Object.fromEntries(searchParams.entries())
+    });
+  }, [searchParams, accessToken, refreshToken, type]);
+
   // Handle auth tokens from password reset email
   useEffect(() => {
     const handleAuthTokens = async () => {
       if (type === 'recovery' && accessToken && refreshToken) {
+        console.log('Processing recovery tokens...');
         try {
           const { data, error } = await supabase.auth.setSession({
             access_token: accessToken,
@@ -111,6 +123,8 @@ export default function Auth() {
           });
           navigate('/auth');
         }
+      } else if (type === 'recovery') {
+        console.log('Recovery type detected but missing tokens:', { accessToken: !!accessToken, refreshToken: !!refreshToken });
       }
     };
 
@@ -282,7 +296,7 @@ export default function Auth() {
       // Add timestamp to make each request unique and force new email generation
       const timestamp = Date.now();
       const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail, {
-        redirectTo: `${window.location.origin}/auth?timestamp=${timestamp}`,
+        redirectTo: `${window.location.origin}/auth`,
       });
 
       if (error) {
@@ -398,8 +412,9 @@ export default function Auth() {
     }
   };
 
-  // Show password reset form if reset=true in URL or if we have recovery tokens
-  if (isPasswordReset || type === 'recovery') {
+  // Show password reset form if we have recovery tokens or explicit reset flag
+  if (type === 'recovery' || isPasswordReset) {
+    console.log('Showing password reset form:', { type, isPasswordReset });
     return (
       <div className="min-h-screen bg-background">
         <Header />
