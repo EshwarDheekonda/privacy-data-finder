@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Shield, Search, Settings, User } from 'lucide-react';
+import { Menu, X, Shield, Search, Settings, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 interface HeaderProps {
   onGetStartedClick?: () => void;
@@ -11,6 +14,9 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onGetStartedClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +32,27 @@ export const Header: React.FC<HeaderProps> = ({ onGetStartedClick }) => {
     { name: 'How It Works', href: '#how-it-works' },
     { name: 'Use Cases', href: '#use-cases' }
   ];
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({
+        title: 'Sign out failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } else {
+      toast({
+        title: 'Signed out successfully',
+        description: 'You have been signed out.',
+      });
+      navigate('/');
+    }
+  };
+
+  const handleAuthClick = () => {
+    navigate('/auth');
+  };
 
   return (
     <header className={cn(
@@ -62,35 +89,49 @@ export const Header: React.FC<HeaderProps> = ({ onGetStartedClick }) => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className="text-white/80 hover:text-white hover:bg-white/10"
-            >
-              <Search className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className="text-white/80 hover:text-white hover:bg-white/10"
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="border-white/20 text-white hover:bg-white/10 hover:border-white/40"
-            >
-              <User className="h-4 w-4 mr-2" />
-              Sign In
-            </Button>
-            <Button 
-              size="sm"
-              onClick={onGetStartedClick}
-              className="bg-primary hover:bg-primary/90 glow-primary transition-colors"
-            >
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="text-white/80 hover:text-white hover:bg-white/10"
+                >
+                  <Search className="h-4 w-4" />
+                </Button>
+                <div className="flex items-center gap-2 text-white/80 text-sm">
+                  <User className="h-4 w-4" />
+                  {user.email}
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="border-white/20 text-white hover:bg-white/10 hover:border-white/40"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleAuthClick}
+                  className="border-white/20 text-white hover:bg-white/10 hover:border-white/40"
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  Sign In
+                </Button>
+                <Button 
+                  size="sm"
+                  onClick={onGetStartedClick}
+                  className="bg-primary hover:bg-primary/90 glow-primary transition-colors"
+                >
+                  Get Started
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -125,24 +166,51 @@ export const Header: React.FC<HeaderProps> = ({ onGetStartedClick }) => {
                 </a>
               ))}
               <div className="flex flex-col space-y-2 pt-4 border-t border-white/10">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="border-white/20 text-white hover:bg-white/10 hover:border-white/40 justify-center"
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  Sign In
-                </Button>
-                <Button 
-                  size="sm"
-                  onClick={() => {
-                    onGetStartedClick?.();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="bg-primary hover:bg-primary/90 glow-primary justify-center transition-colors"
-                >
-                  Get Started
-                </Button>
+                {user ? (
+                  <>
+                    <div className="flex items-center gap-2 text-white/80 text-sm p-2">
+                      <User className="h-4 w-4" />
+                      {user.email}
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        handleSignOut();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="border-white/20 text-white hover:bg-white/10 hover:border-white/40 justify-center"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        handleAuthClick();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="border-white/20 text-white hover:bg-white/10 hover:border-white/40 justify-center"
+                    >
+                      <User className="h-4 w-4 mr-2" />
+                      Sign In
+                    </Button>
+                    <Button 
+                      size="sm"
+                      onClick={() => {
+                        onGetStartedClick?.();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="bg-primary hover:bg-primary/90 glow-primary justify-center transition-colors"
+                    >
+                      Get Started
+                    </Button>
+                  </>
+                )}
               </div>
             </nav>
           </div>

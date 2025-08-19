@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ResultsDisplay } from '@/components/ResultsDisplay';
 import { ResultsProvider } from '@/contexts/ResultsContext';
+import { ProtectedResults } from '@/components/ProtectedResults';
 import { SearchResponse } from '@/lib/api';
 import { ArrowLeft, Download, Share, RefreshCw } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
@@ -148,7 +149,12 @@ const Results = () => {
 
         {/* Main Content */}
         <main className="container mx-auto px-4 py-8">
-          <ResultsDisplay searchResponse={searchResponse} />
+          <ProtectedResults 
+            searchQuery={searchResponse.query}
+            resultsCount={searchResponse.results?.length}
+          >
+            <ResultsDisplay searchResponse={searchResponse} />
+          </ProtectedResults>
         </main>
       </div>
     </ResultsProvider>
