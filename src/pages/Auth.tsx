@@ -82,12 +82,16 @@ export default function Auth() {
 
   // Debug logging
   useEffect(() => {
-    console.log('URL Search Params:', {
+    const allParams = Object.fromEntries(searchParams.entries());
+    console.log('Auth page loaded with URL params:', {
       reset: searchParams.get('reset'),
       type: searchParams.get('type'),
       access_token: accessToken ? 'present' : 'missing',
       refresh_token: refreshToken ? 'present' : 'missing',
-      all_params: Object.fromEntries(searchParams.entries())
+      error: searchParams.get('error'),
+      error_description: searchParams.get('error_description'),
+      all_params: allParams,
+      current_url: window.location.href
     });
   }, [searchParams, accessToken, refreshToken, type]);
 
@@ -293,8 +297,12 @@ export default function Auth() {
 
     setIsSendingReset(true);
     try {
-      // Add timestamp to make each request unique and force new email generation
-      const timestamp = Date.now();
+      // First, sign out any existing sessions to ensure fresh tokens
+      await supabase.auth.signOut();
+      
+      // Wait a moment before sending reset
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail, {
         redirectTo: `${window.location.origin}/auth`,
       });
@@ -308,7 +316,7 @@ export default function Auth() {
       } else {
         toast({
           title: 'Password reset email sent!',
-          description: 'Check your email for the password reset link. A new email has been sent.',
+          description: 'Check your email for the new password reset link.',
         });
         setShowForgotPassword(false);
         setForgotPasswordEmail('');
