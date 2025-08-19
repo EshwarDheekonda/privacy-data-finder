@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useUsernameCheck } from '@/hooks/useUsernameCheck';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -11,8 +12,8 @@ import { Separator } from '@/components/ui/separator';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Loader2, Mail, Lock, User, Chrome, CheckCircle, ArrowLeft, Clock, RotateCcw } from 'lucide-react';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
+import { Loader2, Mail, Lock, User, Chrome, CheckCircle, ArrowLeft, Clock, RotateCcw, AlertCircle, Check } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -54,6 +55,10 @@ export default function Auth() {
       fullName: '',
     },
   });
+
+  // Username availability check
+  const currentUsername = signUpForm.watch('username');
+  const { isChecking, isAvailable, error: usernameError } = useUsernameCheck(currentUsername);
 
   const signInForm = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -410,8 +415,43 @@ export default function Auth() {
                             Username
                           </FormLabel>
                           <FormControl>
-                            <Input placeholder="Choose a username" {...field} />
+                            <div className="relative">
+                              <Input placeholder="Choose a username" {...field} />
+                              {field.value && field.value.length >= 3 && (
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                                  {isChecking ? (
+                                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                                  ) : isAvailable === true ? (
+                                    <Check className="h-4 w-4 text-green-500" />
+                                  ) : isAvailable === false ? (
+                                    <AlertCircle className="h-4 w-4 text-destructive" />
+                                  ) : null}
+                                </div>
+                              )}
+                            </div>
                           </FormControl>
+                          <FormDescription className="text-xs text-muted-foreground">
+                            Username must be 3+ characters. Only letters, numbers, and underscores allowed.
+                          </FormDescription>
+                          {field.value && field.value.length >= 3 && (
+                            <>
+                              {isAvailable === false && (
+                                <p className="text-xs text-destructive flex items-center gap-1">
+                                  <AlertCircle className="h-3 w-3" />
+                                  Username already taken. Try another one.
+                                </p>
+                              )}
+                              {isAvailable === true && (
+                                <p className="text-xs text-green-600 flex items-center gap-1">
+                                  <Check className="h-3 w-3" />
+                                  Username is available!
+                                </p>
+                              )}
+                              {usernameError && (
+                                <p className="text-xs text-destructive">{usernameError}</p>
+                              )}
+                            </>
+                          )}
                           <FormMessage />
                         </FormItem>
                       )}
@@ -448,7 +488,11 @@ export default function Auth() {
                       )}
                     />
                     
-                    <Button type="submit" className="w-full" disabled={isLoading}>
+                    <Button 
+                      type="submit" 
+                      className="w-full" 
+                      disabled={isLoading || (currentUsername && currentUsername.length >= 3 && isAvailable === false)}
+                    >
                       {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                       Create Account
                     </Button>
