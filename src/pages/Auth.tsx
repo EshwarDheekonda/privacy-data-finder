@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useUsernameCheck } from '@/hooks/useUsernameCheck';
+import { useEmailCheck } from '@/hooks/useEmailCheck';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { Loader2, Mail, Lock, User, Chrome, CheckCircle, ArrowLeft, Clock, RotateCcw, AlertCircle, Check } from 'lucide-react';
+import { Loader2, Mail, Lock, User, Chrome, CheckCircle, ArrowLeft, Clock, RotateCcw, AlertCircle, Check, Info } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -59,6 +60,10 @@ export default function Auth() {
   // Username availability check
   const currentUsername = signUpForm.watch('username');
   const { isChecking, isAvailable, error: usernameError } = useUsernameCheck(currentUsername);
+
+  // Email availability check
+  const currentEmail = signUpForm.watch('email');
+  const { isChecking: isCheckingEmail, emailExists, error: emailError } = useEmailCheck(currentEmail);
 
   const signInForm = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -398,8 +403,30 @@ export default function Auth() {
                             Email
                           </FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter your email" {...field} />
+                            <div className="relative">
+                              <Input placeholder="Enter your email" {...field} />
+                              {field.value && field.value.includes('@') && (
+                                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                                  {isCheckingEmail ? (
+                                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                                  ) : emailExists === true ? (
+                                    <Info className="h-4 w-4 text-blue-500" />
+                                  ) : null}
+                                </div>
+                              )}
+                            </div>
                           </FormControl>
+                          {field.value && field.value.includes('@') && emailExists === true && (
+                            <div className="p-2 bg-blue-50 border border-blue-200 rounded-md">
+                              <p className="text-xs text-blue-700 flex items-center gap-1">
+                                <Info className="h-3 w-3" />
+                                An account already exists with this email. Continue to sign in instead.
+                              </p>
+                            </div>
+                          )}
+                          {emailError && (
+                            <p className="text-xs text-destructive">{emailError}</p>
+                          )}
                           <FormMessage />
                         </FormItem>
                       )}
