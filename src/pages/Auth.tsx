@@ -432,99 +432,127 @@ export default function Auth() {
                       )}
                     />
                     
-                    <FormField
-                      control={signUpForm.control}
-                      name="username"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2">
-                            <User className="h-4 w-4" />
-                            Username
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input placeholder="Choose a username" {...field} />
-                              {field.value && field.value.length >= 3 && (
-                                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                                  {isChecking ? (
-                                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                                  ) : isAvailable === true ? (
-                                    <Check className="h-4 w-4 text-green-500" />
-                                  ) : isAvailable === false ? (
-                                    <AlertCircle className="h-4 w-4 text-destructive" />
-                                  ) : null}
-                                </div>
-                              )}
-                            </div>
-                          </FormControl>
-                          {field.value && field.value.length > 0 && (
-                            <FormDescription className="text-xs text-muted-foreground">
-                              Username must be 3+ characters. Only letters, numbers, and underscores allowed.
-                            </FormDescription>
-                          )}
-                          {field.value && field.value.length >= 3 && (
-                            <>
-                              {isAvailable === false && (
-                                <p className="text-xs text-destructive flex items-center gap-1">
-                                  <AlertCircle className="h-3 w-3" />
-                                  Username already taken. Try another one.
-                                </p>
-                              )}
-                              {isAvailable === true && (
-                                <p className="text-xs text-green-600 flex items-center gap-1">
-                                  <Check className="h-3 w-3" />
-                                  Username is available!
-                                </p>
-                              )}
-                              {usernameError && (
-                                <p className="text-xs text-destructive">{usernameError}</p>
-                              )}
-                            </>
-                          )}
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                     
-                    <FormField
-                      control={signUpForm.control}
-                      name="fullName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Full Name (Optional)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Enter your full name" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    {/* Only show username field if email doesn't exist */}
+                    {!emailExists && (
+                      <FormField
+                        control={signUpForm.control}
+                        name="username"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <User className="h-4 w-4" />
+                              Username
+                            </FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Input placeholder="Choose a username" {...field} />
+                                {field.value && field.value.length >= 3 && (
+                                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                                    {isChecking ? (
+                                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                                    ) : isAvailable === true ? (
+                                      <Check className="h-4 w-4 text-green-500" />
+                                    ) : isAvailable === false ? (
+                                      <AlertCircle className="h-4 w-4 text-destructive" />
+                                    ) : null}
+                                  </div>
+                                )}
+                              </div>
+                            </FormControl>
+                            {field.value && field.value.length > 0 && (
+                              <FormDescription className="text-xs text-muted-foreground">
+                                Username must be 3+ characters. Only letters, numbers, and underscores allowed.
+                              </FormDescription>
+                            )}
+                            {field.value && field.value.length >= 3 && (
+                              <>
+                                {isAvailable === false && (
+                                  <p className="text-xs text-destructive flex items-center gap-1">
+                                    <AlertCircle className="h-3 w-3" />
+                                    Username already taken. Try another one.
+                                  </p>
+                                )}
+                                {isAvailable === true && (
+                                  <p className="text-xs text-green-600 flex items-center gap-1">
+                                    <Check className="h-3 w-3" />
+                                    Username is available!
+                                  </p>
+                                )}
+                                {usernameError && (
+                                  <p className="text-xs text-destructive">{usernameError}</p>
+                                )}
+                              </>
+                            )}
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
                     
-                    <FormField
-                      control={signUpForm.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center gap-2">
-                            <Lock className="h-4 w-4" />
-                            Password
-                          </FormLabel>
-                          <FormControl>
-                            <Input type="password" placeholder="Create a password" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    {/* Only show full name field if email doesn't exist */}
+                    {!emailExists && (
+                      <FormField
+                        control={signUpForm.control}
+                        name="fullName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Full Name (Optional)</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Enter your full name" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
                     
-                    <Button 
-                      type="submit" 
-                      className="w-full" 
-                      disabled={isLoading || (currentUsername && currentUsername.length >= 3 && isAvailable === false)}
-                    >
-                      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Create Account
-                    </Button>
+                    {/* Only show password field if email doesn't exist */}
+                    {!emailExists && (
+                      <FormField
+                        control={signUpForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center gap-2">
+                              <Lock className="h-4 w-4" />
+                              Password
+                            </FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="Create a password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                    
+                    {emailExists ? (
+                      <Button 
+                        type="button" 
+                        variant="outline"
+                        className="w-full" 
+                        onClick={() => {
+                          // Switch to sign in tab and clear the form
+                          const tabsList = document.querySelector('[role="tablist"]');
+                          const signInTab = tabsList?.querySelector('[value="signin"]') as HTMLElement;
+                          signInTab?.click();
+                          signUpForm.reset();
+                        }}
+                      >
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Back to Sign In
+                      </Button>
+                    ) : (
+                      <Button 
+                        type="submit" 
+                        className="w-full" 
+                        disabled={isLoading || (currentUsername && currentUsername.length >= 3 && isAvailable === false)}
+                      >
+                        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        Create Account
+                      </Button>
+                    )}
                   </form>
                 </Form>
               </TabsContent>
