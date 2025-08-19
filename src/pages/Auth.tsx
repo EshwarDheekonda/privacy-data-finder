@@ -12,8 +12,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Loader2, Mail, Lock, User, Chrome } from 'lucide-react';
+import { Loader2, Mail, Lock, User, Chrome, CheckCircle, ArrowLeft } from 'lucide-react';
 import { Header } from '@/components/Header';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const signUpSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -33,6 +34,8 @@ type SignInFormData = z.infer<typeof signInSchema>;
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [showVerificationBanner, setShowVerificationBanner] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
   const { user, signUp, signIn, signInWithGoogle } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -89,12 +92,11 @@ export default function Auth() {
             variant: 'destructive',
           });
         }
-      } else {
-        toast({
-          title: 'Account created successfully!',
-          description: 'You can now start exploring your digital footprint.',
-        });
-      }
+        } else {
+          setUserEmail(data.email);
+          setShowVerificationBanner(true);
+          signUpForm.reset();
+        }
     } catch (error) {
       toast({
         title: 'Unexpected error',
@@ -164,6 +166,57 @@ export default function Auth() {
       setIsGoogleLoading(false);
     }
   };
+
+  if (showVerificationBanner) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        
+        <main className="container mx-auto px-4 pt-24 pb-8 max-w-md">
+          <Card className="glass-card border-primary/20">
+            <CardContent className="pt-6">
+              <div className="text-center space-y-4">
+                <div className="mx-auto h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center">
+                  <CheckCircle className="h-8 w-8 text-primary" />
+                </div>
+                
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-bold text-primary">Check Your Email</h2>
+                  <p className="text-muted-foreground">
+                    We've sent a verification email to
+                  </p>
+                  <p className="font-medium">{userEmail}</p>
+                </div>
+                
+                <Alert className="border-primary/20 bg-primary/5">
+                  <Mail className="h-4 w-4" />
+                  <AlertDescription>
+                    Please check your email and click the verification link to activate your account. 
+                    Don't forget to check your spam folder if you don't see it in your inbox.
+                  </AlertDescription>
+                </Alert>
+                
+                <div className="pt-4 space-y-3">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowVerificationBanner(false)}
+                    className="w-full"
+                  >
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to Sign In
+                  </Button>
+                  
+                  <p className="text-xs text-muted-foreground">
+                    Didn't receive the email? Check your spam folder or try signing up again.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
