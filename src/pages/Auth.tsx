@@ -24,7 +24,7 @@ const signUpSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   username: z.string().min(3, 'Username must be at least 3 characters').regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
-  fullName: z.string().optional(),
+  fullName: z.string().min(1, 'Full name is required'),
 });
 
 const signInSchema = z.object({
@@ -828,7 +828,7 @@ export default function Auth() {
                         name="fullName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Full Name (Optional)</FormLabel>
+                            <FormLabel>Full Name</FormLabel>
                             <FormControl>
                               <Input placeholder="Enter your full name" {...field} />
                             </FormControl>
