@@ -113,6 +113,19 @@ export const FooterSection = () => {
                   </a>
                 </li>
               ))}
+              
+              {/* Delete Account Link - Only show if user is authenticated */}
+              {user && (
+                <li>
+                  <button
+                    onClick={() => setShowDeleteDialog(true)}
+                    className="text-sm text-muted-foreground hover:text-destructive transition-colors duration-200 flex items-center gap-2 group"
+                  >
+                    <Trash2 className="w-3 h-3 group-hover:text-destructive" />
+                    Delete Account
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -160,21 +173,8 @@ export const FooterSection = () => {
 
         {/* Bottom Bar */}
         <div className="border-t border-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-6">
-            <div className="text-sm text-muted-foreground">
-              © 2024 PrivacyGuard. All rights reserved.
-            </div>
-            
-            {/* Delete Account Link - Only show if user is authenticated */}
-            {user && (
-              <button
-                onClick={() => setShowDeleteDialog(true)}
-                className="text-sm text-muted-foreground hover:text-destructive transition-colors duration-200 flex items-center gap-2 group"
-              >
-                <Trash2 className="w-3 h-3 group-hover:text-destructive" />
-                Delete Account
-              </button>
-            )}
+          <div className="text-sm text-muted-foreground">
+            © 2024 PrivacyGuard. All rights reserved.
           </div>
           
           {/* Social Links */}
