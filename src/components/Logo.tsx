@@ -34,7 +34,7 @@ export const Logo: React.FC<LogoProps> = ({
   const logoComponent = (
     <img 
       src={logoSrc} 
-      alt="PrivacyShield Logo" 
+      alt="PrivacyGuard Logo" 
       className={cn(
         sizeClasses[size],
         'transition-all duration-300',
@@ -60,7 +60,7 @@ export const Logo: React.FC<LogoProps> = ({
           size === 'xl' && "text-3xl",
           variant === 'white' ? 'text-white' : variant === 'dark' ? 'text-foreground' : 'gradient-text'
         )}>
-          PrivacyShield
+          PrivacyGuard
         </span>
         <span className={cn(
           "text-xs font-medium opacity-80",
