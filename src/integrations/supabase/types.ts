@@ -22,6 +22,7 @@ export type Database = {
           id: string
           is_used: boolean
           otp_code: string
+          purpose: string
         }
         Insert: {
           created_at?: string
@@ -30,6 +31,7 @@ export type Database = {
           id?: string
           is_used?: boolean
           otp_code: string
+          purpose?: string
         }
         Update: {
           created_at?: string
@@ -38,6 +40,7 @@ export type Database = {
           id?: string
           is_used?: boolean
           otp_code?: string
+          purpose?: string
         }
         Relationships: []
       }
