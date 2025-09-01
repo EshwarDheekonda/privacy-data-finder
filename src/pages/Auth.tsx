@@ -74,11 +74,16 @@ export default function Auth() {
   const currentEmail = signUpForm.watch('email');
   const { isChecking: isCheckingEmail, emailExists, error: emailError } = useEmailCheck(currentEmail);
 
-  // Check if this is a password reset flow
+  // Check if this is a password reset flow - multiple ways to detect it
   const isPasswordReset = searchParams.get('reset') === 'true';
   const accessToken = searchParams.get('access_token');
   const refreshToken = searchParams.get('refresh_token');
   const type = searchParams.get('type');
+  
+  // Additional password reset detection methods for better compatibility
+  const hasResetTokens = accessToken && refreshToken;
+  const isRecoveryType = type === 'recovery';
+  const isPasswordResetFlow = isPasswordReset || isRecoveryType || hasResetTokens;
 
   // Debug logging
   useEffect(() => {
@@ -168,9 +173,12 @@ export default function Auth() {
     }
   }, [searchParams]);
 
-  // Redirect if already authenticated
+  // Redirect if already authenticated (but not during password reset)
   useEffect(() => {
-    if (user) {
+    // Don't redirect if this is a password reset flow
+    const isPasswordResetFlow = type === 'recovery' || isPasswordReset || searchParams.get('reset') === 'true';
+    
+    if (user && !isPasswordResetFlow) {
       const redirectTo = searchParams.get('redirectTo') || '/';
       
       // If redirecting to results page, restore search results from localStorage
@@ -185,7 +193,7 @@ export default function Auth() {
       
       navigate(redirectTo);
     }
-  }, [user, navigate, searchParams]);
+  }, [user, navigate, searchParams, type, isPasswordReset]);
 
   const handleSignUp = async (data: SignUpFormData) => {
     setIsLoading(true);
@@ -322,8 +330,11 @@ export default function Auth() {
       // Wait a moment before sending reset
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      // Create a more explicit redirect URL for password reset
+      const resetRedirectUrl = `${window.location.origin}/auth?reset=true&type=recovery`;
+      
       const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail, {
-        redirectTo: `${window.location.origin}/auth`,
+        redirectTo: resetRedirectUrl,
       });
 
       if (error) {
@@ -335,7 +346,7 @@ export default function Auth() {
       } else {
         toast({
           title: 'Password reset email sent!',
-          description: 'Check your email for the new password reset link.',
+          description: 'Check your email for the password reset link.',
         });
         setShowForgotPassword(false);
         setForgotPasswordEmail('');
@@ -394,10 +405,10 @@ export default function Auth() {
       } else {
         toast({
           title: 'Password reset successful!',
-          description: 'Your password has been updated. You can now sign in with your new password.',
+          description: 'Your password has been updated. You are now signed in.',
         });
-        // Redirect to sign in
-        navigate('/auth');
+        // Clear URL parameters and redirect to home page
+        navigate('/');
       }
     } catch (error) {
       toast({
@@ -453,8 +464,8 @@ export default function Auth() {
   };
 
   // Show password reset form if we have recovery tokens or explicit reset flag
-  if (type === 'recovery' || isPasswordReset) {
-    console.log('Showing password reset form:', { type, isPasswordReset });
+  if (isPasswordResetFlow) {
+    console.log('Showing password reset form:', { type, isPasswordReset, hasResetTokens, isRecoveryType });
     return (
       <div className="min-h-screen bg-background">
         <Header />
