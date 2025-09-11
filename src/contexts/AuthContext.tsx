@@ -27,20 +27,24 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const DEBUG_UI = import.meta.env.VITE_DEBUG_UI === 'true' || 
+                   localStorage.getItem('debug_ui') === 'true' || 
+                   new URLSearchParams(window.location.search).get('debug') === '1';
+  
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  console.log("🔐 AuthProvider: Rendering with loading:", loading, "user:", !!user);
+  if (DEBUG_UI) console.log("🔐 AuthProvider: Rendering with loading:", loading, "user:", !!user);
 
   useEffect(() => {
-    console.log("🔐 AuthProvider: Setting up auth state listener");
+    if (DEBUG_UI) console.log("🔐 AuthProvider: Setting up auth state listener");
     
     // Test Supabase connection first
     const testConnection = async () => {
       try {
         const { data, error } = await supabase.auth.getSession();
-        console.log("🔗 Supabase connection test:", { success: !error, data: !!data });
+        if (DEBUG_UI) console.log("🔗 Supabase connection test:", { success: !error, data: !!data });
         if (error) {
           console.error("🚨 Supabase connection error:", error);
         }
@@ -54,7 +58,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log("🔐 Auth state change:", event, !!session);
+        if (DEBUG_UI) console.log("🔐 Auth state change:", event, !!session);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -63,7 +67,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session }, error }) => {
-      console.log("🔐 Initial session check:", !!session, error);
+      if (DEBUG_UI) console.log("🔐 Initial session check:", !!session, error);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -73,7 +77,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [DEBUG_UI]);
 
   const signUp = async (email: string, password: string, username: string, fullName: string) => {
     const redirectUrl = `${window.location.origin}/auth`;

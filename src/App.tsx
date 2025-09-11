@@ -17,11 +17,15 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
+  const DEBUG_UI = import.meta.env.VITE_DEBUG_UI === 'true' || 
+                   localStorage.getItem('debug_ui') === 'true' || 
+                   new URLSearchParams(window.location.search).get('debug') === '1';
+  
   const [debugInfo, setDebugInfo] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log("🚀 App.tsx: Component mounting");
-    setDebugInfo(prev => [...prev, "App component mounted"]);
+    if (DEBUG_UI) console.log("🚀 App.tsx: Component mounting");
+    if (DEBUG_UI) setDebugInfo(prev => [...prev, "App component mounted"]);
     
     // Ensure the title is always set correctly, overriding any dynamic changes
     document.title = "PrivacyGuard - PII Risk Assessment & Digital Privacy Protection";
@@ -29,12 +33,12 @@ const App = () => {
     // Global error handler
     const handleError = (event: ErrorEvent) => {
       console.error("🚨 Global Error:", event.error);
-      setDebugInfo(prev => [...prev, `Global Error: ${event.error?.message || 'Unknown error'}`]);
+      if (DEBUG_UI) setDebugInfo(prev => [...prev, `Global Error: ${event.error?.message || 'Unknown error'}`]);
     };
     
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
       console.error("🚨 Unhandled Promise Rejection:", event.reason);
-      setDebugInfo(prev => [...prev, `Promise Rejection: ${event.reason}`]);
+      if (DEBUG_UI) setDebugInfo(prev => [...prev, `Promise Rejection: ${event.reason}`]);
     };
     
     window.addEventListener('error', handleError);
@@ -44,14 +48,14 @@ const App = () => {
       window.removeEventListener('error', handleError);
       window.removeEventListener('unhandledrejection', handleUnhandledRejection);
     };
-  }, []);
+  }, [DEBUG_UI]);
 
-  console.log("🔄 App.tsx: Rendering with debug info:", debugInfo);
+  if (DEBUG_UI) console.log("🔄 App.tsx: Rendering with debug info:", debugInfo);
 
   return (
     <div className="relative">
-      {/* Debug info overlay - only show if there are errors */}
-      {debugInfo.length > 1 && (
+      {/* Debug info overlay - only show if there are errors and DEBUG_UI is enabled */}
+      {DEBUG_UI && debugInfo.length > 1 && (
         <div className="fixed top-0 left-0 z-50 bg-red-500 text-white p-2 text-xs max-w-md">
           <div className="font-bold">Debug Info:</div>
           {debugInfo.map((info, i) => (
