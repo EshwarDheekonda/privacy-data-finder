@@ -31,10 +31,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
+  console.log("🔐 AuthProvider: Rendering with loading:", loading, "user:", !!user);
+
   useEffect(() => {
+    console.log("🔐 AuthProvider: Setting up auth state listener");
+    
+    // Test Supabase connection first
+    const testConnection = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        console.log("🔗 Supabase connection test:", { success: !error, data: !!data });
+        if (error) {
+          console.error("🚨 Supabase connection error:", error);
+        }
+      } catch (err) {
+        console.error("🚨 Supabase connection failed:", err);
+      }
+    };
+    
+    testConnection();
+    
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log("🔐 Auth state change:", event, !!session);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -42,9 +62,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      console.log("🔐 Initial session check:", !!session, error);
       setSession(session);
       setUser(session?.user ?? null);
+      setLoading(false);
+    }).catch(err => {
+      console.error("🚨 Session check error:", err);
       setLoading(false);
     });
 
