@@ -71,8 +71,11 @@ const DetailedResults = () => {
         
         console.log('Analysis response received:', analysisResponse);
         
-        // Check if response indicates no data found
-        if (analysisResponse.message && analysisResponse.suggestions) {
+        // Check if response indicates no data found (only if it's actually an error message)
+        if (analysisResponse.message && analysisResponse.suggestions && 
+            (analysisResponse.message.toLowerCase().includes('no data') || 
+             analysisResponse.message.toLowerCase().includes('no relevant') ||
+             analysisResponse.message.toLowerCase().includes('not found'))) {
           setHasError(true);
         }
         
