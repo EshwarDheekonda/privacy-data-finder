@@ -1,7 +1,7 @@
 import { toast } from '@/hooks/use-toast';
 
 // API Configuration
-const API_BASE_URL = 'http://127.0.0.1:5000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:5000';
 
 // Raw API Response Interfaces (matching actual backend structure)
 export interface RawWebpageResult {
