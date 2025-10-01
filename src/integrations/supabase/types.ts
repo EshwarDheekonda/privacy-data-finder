@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      password_reset_otps: {
+        Row: {
+          created_at: string | null
+          email: string
+          expires_at: string | null
+          id: string
+          is_used: boolean | null
+          otp_code: string
+          purpose: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          expires_at?: string | null
+          id?: string
+          is_used?: boolean | null
+          otp_code: string
+          purpose?: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          expires_at?: string | null
+          id?: string
+          is_used?: boolean | null
+          otp_code?: string
+          purpose?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -78,6 +108,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_otps: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       email_exists: {
         Args: { email_input: string }
         Returns: boolean
