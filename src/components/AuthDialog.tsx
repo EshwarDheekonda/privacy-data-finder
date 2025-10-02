@@ -45,9 +45,11 @@ export const AuthDialog = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const [showPasswordResetOTP, setShowPasswordResetOTP] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [otp, setOtp] = useState('');
+  const [passwordResetOtp, setPasswordResetOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [otpTimer, setOtpTimer] = useState(0);
@@ -109,9 +111,12 @@ export const AuthDialog = () => {
     setShowForgotPassword(false);
     setShowOTPVerification(false);
     setShowPasswordReset(false);
+    setShowPasswordResetOTP(false);
     setOtp('');
+    setPasswordResetOtp('');
     setNewPassword('');
     setConfirmNewPassword('');
+    setForgotPasswordEmail('');
   };
 
   const handleTabChange = (value: string) => {
@@ -269,16 +274,88 @@ export const AuthDialog = () => {
           variant: 'destructive',
         });
       } else {
-        toast({
-          title: 'Password reset link sent!',
-          description: 'Check your email for a password reset link.',
-        });
         setShowForgotPassword(false);
-        setForgotPasswordEmail('');
+        setShowPasswordResetOTP(true);
+        setOtpTimer(60);
+        toast({
+          title: 'Verification code sent!',
+          description: 'Check your email for a 6-digit verification code.',
+        });
       }
     } catch (error: any) {
       toast({
         title: 'Password reset failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyPasswordResetOTP = async () => {
+    if (passwordResetOtp.length !== 6) {
+      toast({
+        title: 'Invalid OTP',
+        description: 'Please enter a 6-digit code',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { error } = await verifyOTP(forgotPasswordEmail, passwordResetOtp, 'recovery');
+      
+      if (error) {
+        toast({
+          title: 'Verification failed',
+          description: error.message,
+          variant: 'destructive',
+        });
+      } else {
+        setShowPasswordResetOTP(false);
+        setShowPasswordReset(true);
+        toast({
+          title: 'Verified!',
+          description: 'Now you can set your new password.',
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Verification failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResendPasswordResetOTP = async () => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'recovery' as any,
+        email: forgotPasswordEmail,
+      });
+      
+      if (error) {
+        toast({
+          title: 'Failed to resend code',
+          description: error.message,
+          variant: 'destructive',
+        });
+      } else {
+        setOtpTimer(60);
+        toast({
+          title: 'Code resent!',
+          description: 'Check your email for a new verification code.',
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: 'Failed to resend code',
         description: error.message,
         variant: 'destructive',
       });
@@ -468,12 +545,76 @@ export const AuthDialog = () => {
               </Button>
             </div>
           </div>
+        ) : showPasswordResetOTP ? (
+          <div className="space-y-6">
+            <DialogHeader>
+              <DialogTitle>Verify Your Identity</DialogTitle>
+              <DialogDescription>
+                We've sent a 6-digit code to {forgotPasswordEmail}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="password-reset-otp">Verification Code</Label>
+                <Input
+                  id="password-reset-otp"
+                  type="text"
+                  placeholder="000000"
+                  maxLength={6}
+                  value={passwordResetOtp}
+                  onChange={(e) => setPasswordResetOtp(e.target.value.replace(/\D/g, ''))}
+                  className="text-center text-2xl tracking-widest"
+                />
+              </div>
+              <Button
+                onClick={handleVerifyPasswordResetOTP}
+                disabled={isLoading || passwordResetOtp.length !== 6}
+                className="w-full"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Verifying...
+                  </>
+                ) : (
+                  'Verify Code'
+                )}
+              </Button>
+              <div className="text-center">
+                {otpTimer > 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    Resend code in {otpTimer}s
+                  </p>
+                ) : (
+                  <Button
+                    variant="link"
+                    onClick={handleResendPasswordResetOTP}
+                    disabled={isLoading}
+                    className="text-sm"
+                  >
+                    Resend verification code
+                  </Button>
+                )}
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowPasswordResetOTP(false);
+                  setPasswordResetOtp('');
+                  setShowForgotPassword(true);
+                }}
+                className="w-full"
+              >
+                Back to Email Entry
+              </Button>
+            </div>
+          </div>
         ) : showForgotPassword ? (
           <div className="space-y-6">
             <DialogHeader>
               <DialogTitle>Reset Password</DialogTitle>
               <DialogDescription>
-                Enter your email address and we'll send you a password reset link.
+                Enter your email address and we'll send you a verification code.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
@@ -508,7 +649,7 @@ export const AuthDialog = () => {
                   ) : (
                     <>
                       <Mail className="mr-2 h-4 w-4" />
-                      Send Reset Link
+                      Send Code
                     </>
                   )}
                 </Button>

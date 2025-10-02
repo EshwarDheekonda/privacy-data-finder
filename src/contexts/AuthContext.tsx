@@ -101,7 +101,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const { error } = await supabase.auth.verifyOtp({
       email,
       token: otp,
-      type: type === 'signup' ? 'signup' : 'recovery',
+      type: type as any,
     });
     return { error };
   };
