@@ -46,6 +46,7 @@ export const AuthDialog = () => {
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [showPasswordReset, setShowPasswordReset] = useState(false);
   const [showPasswordResetOTP, setShowPasswordResetOTP] = useState(false);
+  const [isInPasswordResetFlow, setIsInPasswordResetFlow] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [otp, setOtp] = useState('');
@@ -97,13 +98,13 @@ export const AuthDialog = () => {
   const { isChecking: isCheckingUsername, isAvailable } = useUsernameCheck(currentUsername);
   const { isChecking: isCheckingEmail, emailExists } = useEmailCheck(currentEmail);
 
-  // Close dialog and redirect when user is authenticated
+  // Close dialog and redirect when user is authenticated (but not during password reset flow)
   useEffect(() => {
-    if (user && isOpen) {
+    if (user && isOpen && !isInPasswordResetFlow) {
       handleClose();
       navigate('/');
     }
-  }, [user, isOpen]);
+  }, [user, isOpen, isInPasswordResetFlow]);
 
   const handleClose = () => {
     searchParams.delete('auth');
@@ -112,6 +113,7 @@ export const AuthDialog = () => {
     setShowOTPVerification(false);
     setShowPasswordReset(false);
     setShowPasswordResetOTP(false);
+    setIsInPasswordResetFlow(false);
     setOtp('');
     setPasswordResetOtp('');
     setNewPassword('');
@@ -274,6 +276,7 @@ export const AuthDialog = () => {
           variant: 'destructive',
         });
       } else {
+        setIsInPasswordResetFlow(true);
         setShowForgotPassword(false);
         setShowPasswordResetOTP(true);
         setOtpTimer(60);
@@ -394,6 +397,7 @@ export const AuthDialog = () => {
           variant: 'destructive',
         });
       } else {
+        setIsInPasswordResetFlow(false);
         toast({
           title: 'Password updated!',
           description: 'Your password has been successfully updated.',
