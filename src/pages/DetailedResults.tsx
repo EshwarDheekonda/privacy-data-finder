@@ -13,10 +13,11 @@ import { SourceAnalysis } from '@/components/dashboard/SourceAnalysis';
 import { EnhancedRiskAssessment } from '@/components/dashboard/EnhancedRiskAssessment';
 import { EnhancedRecommendations } from '@/components/dashboard/EnhancedRecommendations';
 import { EnhancedExportShare } from '@/components/dashboard/EnhancedExportShare';
+import { FeedbackDialog } from '@/components/feedback/FeedbackDialog';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ArrowLeft, Download, Share, AlertTriangle, Shield, Eye, Globe, FileText, TrendingUp, Database } from 'lucide-react';
+import { ArrowLeft, Download, Share, AlertTriangle, Shield, Eye, Globe, FileText, TrendingUp, Database, MessageSquare } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -600,6 +601,33 @@ const DetailedResults = () => {
               <EnhancedExportShare data={analysisData} query={location.state?.query || ''} />
             </TabsContent>
           </Tabs>
+
+          {/* Feedback Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="mt-12 max-w-[800px] mx-auto"
+          >
+            <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+              <CardContent className="p-8 text-center space-y-4">
+                <div className="flex justify-center">
+                  <MessageSquare className="w-12 h-12 text-primary" />
+                </div>
+                <h3 className="text-2xl font-semibold">Share Your Feedback</h3>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  Your input helps us improve PrivacyGuard and serve you better
+                </p>
+                <FeedbackDialog
+                  trigger={
+                    <Button size="lg" className="mt-4">
+                      Give Feedback
+                    </Button>
+                  }
+                />
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </div>
     </PageLayout>

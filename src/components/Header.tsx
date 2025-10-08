@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Shield, Search, Settings, User, LogOut } from 'lucide-react';
+import { Menu, X, Shield, Search, Settings, User, LogOut, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
+import { FeedbackDialog } from '@/components/feedback/FeedbackDialog';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -103,6 +104,18 @@ export const Header: React.FC<HeaderProps> = ({ onGetStartedClick }) => {
                   <User className="h-4 w-4" />
                   {user.email}
                 </div>
+                <FeedbackDialog
+                  trigger={
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="text-white/80 hover:text-white hover:bg-white/10"
+                    >
+                      <MessageSquare className="h-4 w-4 mr-2" />
+                      Feedback
+                    </Button>
+                  }
+                />
                 <Button 
                   variant="outline" 
                   size="sm"
@@ -173,6 +186,18 @@ export const Header: React.FC<HeaderProps> = ({ onGetStartedClick }) => {
                       <User className="h-4 w-4" />
                       {user.email}
                     </div>
+                    <FeedbackDialog
+                      trigger={
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          className="border-white/20 text-white hover:bg-white/10 hover:border-white/40 justify-center"
+                        >
+                          <MessageSquare className="h-4 w-4 mr-2" />
+                          Feedback
+                        </Button>
+                      }
+                    />
                     <Button 
                       variant="outline" 
                       size="sm"

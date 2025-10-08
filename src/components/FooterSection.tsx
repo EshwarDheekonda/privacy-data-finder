@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Shield, Mail, Phone, MapPin, Github, Twitter, Linkedin, Trash2 } from 'lucide-react';
+import { Shield, Mail, Phone, MapPin, Github, Twitter, Linkedin, Trash2, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { DeleteAccountDialog } from '@/components/DeleteAccountDialog';
+import { FeedbackDialog } from '@/components/feedback/FeedbackDialog';
 
 export const FooterSection = () => {
   const { user } = useAuth();
@@ -61,6 +62,18 @@ export const FooterSection = () => {
                   </a>
                 </li>
               ))}
+              
+              {/* Feedback Link */}
+              <li>
+                <FeedbackDialog
+                  trigger={
+                    <button className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200 flex items-center gap-2">
+                      <MessageSquare className="w-3 h-3" />
+                      Give Feedback
+                    </button>
+                  }
+                />
+              </li>
               
               {/* Delete Account Link - Only show if user is authenticated */}
               {user && (
