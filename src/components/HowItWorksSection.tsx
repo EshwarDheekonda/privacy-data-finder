@@ -42,11 +42,11 @@ export const HowItWorksSection = () => {
               {/* Step Card */}
               <div className="glass-card p-8 h-full interactive-hover animate-scale-in" style={{ animationDelay: `${index * 0.2}s` }}>
                 {/* Step Number */}
-                <div className="absolute -top-5 -left-5 w-14 h-14 rounded-full flex items-center justify-center font-bold text-2xl shadow-lg z-10" style={{
-                  background: 'linear-gradient(135deg, hsl(264, 69%, 52%), hsl(264, 69%, 68%))',
-                  boxShadow: '0 4px 12px hsla(264, 69%, 52%, 0.5), 0 0 20px hsla(264, 69%, 52%, 0.3)',
+                <div className="absolute -top-6 -left-6 w-16 h-16 rounded-full flex items-center justify-center font-extrabold text-3xl shadow-2xl z-10 border-4 border-background" style={{
+                  background: 'linear-gradient(135deg, hsl(264, 80%, 65%), hsl(264, 80%, 75%))',
+                  boxShadow: '0 8px 24px hsla(264, 80%, 60%, 0.6), 0 0 40px hsla(264, 80%, 60%, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.4)',
                   color: '#ffffff',
-                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.5), 0 0 8px rgba(255, 255, 255, 0.3)'
+                  textShadow: '0 2px 8px rgba(0, 0, 0, 0.8), 0 0 12px rgba(255, 255, 255, 0.5)'
                 }}>
                   {index + 1}
                 </div>
