@@ -10,14 +10,13 @@ import { RISK_LEVEL_COLORS, PII_CATEGORIES, PLATFORM_COLORS } from '@/types/enha
 import { StatsCards } from '@/components/dashboard/StatsCards';
 import { ExecutiveSummary } from '@/components/dashboard/ExecutiveSummary';
 import { SourceAnalysis } from '@/components/dashboard/SourceAnalysis';
-import { TechnicalDetails } from '@/components/dashboard/TechnicalDetails';
 import { EnhancedRiskAssessment } from '@/components/dashboard/EnhancedRiskAssessment';
 import { EnhancedRecommendations } from '@/components/dashboard/EnhancedRecommendations';
 import { EnhancedExportShare } from '@/components/dashboard/EnhancedExportShare';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ArrowLeft, Download, Share, AlertTriangle, Shield, Eye, Globe, Users, FileText, Settings, TrendingUp, Database } from 'lucide-react';
+import { ArrowLeft, Download, Share, AlertTriangle, Shield, Eye, Globe, FileText, TrendingUp, Database } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -288,7 +287,6 @@ const DetailedResults = () => {
     { value: 'source-analysis', label: 'Source Analysis', icon: Globe },
     { value: 'risk-assessment', label: 'Risk Assessment', icon: Shield },
     { value: 'recommendations', label: 'Recommendations', icon: TrendingUp },
-    { value: 'technical', label: 'Technical Details', icon: Settings },
     { value: 'export', label: 'Export & Share', icon: Download },
   ];
 
@@ -360,7 +358,7 @@ const DetailedResults = () => {
                 </Card>
               </div>
             ) : (
-              <TabsList className="grid w-full grid-cols-4 xl:grid-cols-7 gap-2">
+              <TabsList className="grid w-full grid-cols-3 xl:grid-cols-6 gap-2">
                 <TabsTrigger value="executive" className="text-xs px-2 py-2 min-h-[44px]">
                   <Eye className="w-4 h-4 mr-1" />
                   <span className="hidden lg:inline">Executive</span>
@@ -380,10 +378,6 @@ const DetailedResults = () => {
                 <TabsTrigger value="recommendations" className="text-xs px-2 py-2 min-h-[44px]">
                   <TrendingUp className="w-4 h-4 mr-1" />
                   <span className="hidden lg:inline">Tips</span>
-                </TabsTrigger>
-                <TabsTrigger value="technical" className="text-xs px-2 py-2 min-h-[44px]">
-                  <Settings className="w-4 h-4 mr-1" />
-                  <span className="hidden lg:inline">Technical</span>
                 </TabsTrigger>
                 <TabsTrigger value="export" className="text-xs px-2 py-2 min-h-[44px]">
                   <Download className="w-4 h-4 mr-1" />
@@ -438,7 +432,7 @@ const DetailedResults = () => {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Users className="w-5 h-5" />
+                      <FileText className="w-5 h-5" />
                       Personal Information
                     </CardTitle>
                   </CardHeader>
@@ -554,12 +548,7 @@ const DetailedResults = () => {
               <EnhancedRecommendations data={analysisData} />
             </TabsContent>
 
-            {/* Tab 6: Technical Details */}
-            <TabsContent value="technical" className="mt-6">
-              <TechnicalDetails data={analysisData} />
-            </TabsContent>
-
-            {/* Tab 7: Enhanced Export & Sharing */}
+            {/* Tab 6: Enhanced Export & Sharing */}
             <TabsContent value="export" className="mt-6">
               <EnhancedExportShare data={analysisData} query={location.state?.query || ''} />
             </TabsContent>
