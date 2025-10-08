@@ -251,7 +251,7 @@ export const transformWebpageResult = (webpage: RawWebpageResult, index: number)
     confidence: confidence,
     title: webpage.title || webpage.domain,
     snippet: webpage.description || '',
-    reasoning: `Found on ${webpage.domain} (relevance: ${webpage.relevance_score || 0})`,
+    reasoning: `Information found on ${webpage.domain}`,
   };
 };
 
