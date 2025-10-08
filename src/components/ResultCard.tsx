@@ -42,11 +42,18 @@ export const ResultCard = ({ result }: ResultCardProps) => {
   const { toggleResult, isSelected } = useResults();
   const selected = isSelected(result.id);
 
+  const handleCardClick = () => {
+    toggleResult(result.id);
+  };
+
   return (
-    <Card className={cn(
-      "glass-card transition-all duration-200 hover:shadow-lg",
-      selected && "ring-2 ring-primary ring-offset-2"
-    )}>
+    <Card 
+      className={cn(
+        "glass-card transition-all duration-200 hover:shadow-lg cursor-pointer",
+        selected && "ring-2 ring-primary ring-offset-2"
+      )}
+      onClick={handleCardClick}
+    >
       <CardHeader className="px-4 sm:px-6 py-5 sm:py-4 pb-4 sm:pb-3">
         <div className="flex flex-col gap-3">
           {/* Mobile: Risk badge at top, Desktop: Risk badge on right */}
@@ -63,6 +70,7 @@ export const ResultCard = ({ result }: ResultCardProps) => {
               <Checkbox
                 checked={selected}
                 onCheckedChange={() => toggleResult(result.id)}
+                onClick={(e) => e.stopPropagation()}
                 className="h-5 w-5 sm:h-4 sm:w-4 shrink-0"
               />
             </div>
