@@ -49,20 +49,20 @@ export const ResultCard = ({ result }: ResultCardProps) => {
       selected && "ring-2 ring-primary ring-offset-2"
     )}>
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3 flex-1">
+        <div className="flex flex-col sm:flex-row items-start gap-3">
+          <div className="flex items-start gap-3 flex-1 w-full">
             <Checkbox
               checked={selected}
               onCheckedChange={() => toggleResult(result.id)}
-              className="mt-1"
+              className="mt-1 touch-target shrink-0"
             />
-            <div className="flex-1">
-              <CardTitle className="text-lg font-semibold">
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-base sm:text-lg font-semibold break-words">
                 {result.title || result.name}
               </CardTitle>
-              <CardDescription className="flex items-center gap-2 mt-1">
-                <Globe className="w-4 h-4" />
-                {result.source}
+              <CardDescription className="flex items-center gap-2 mt-1 flex-wrap">
+                <Globe className="w-4 h-4 shrink-0" />
+                <span className="truncate">{result.source}</span>
               </CardDescription>
               {result.snippet && (
                 <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
@@ -71,9 +71,9 @@ export const ResultCard = ({ result }: ResultCardProps) => {
               )}
             </div>
           </div>
-          <Badge className={cn("text-xs font-medium", getRiskColor(result.risk_level))}>
+          <Badge className={cn("text-xs font-medium shrink-0 self-start sm:self-auto", getRiskColor(result.risk_level))}>
             {getRiskIcon(result.risk_level)}
-            <span className="ml-1 capitalize">{result.risk_level} Risk</span>
+            <span className="ml-1 capitalize whitespace-nowrap">{result.risk_level}</span>
           </Badge>
         </div>
       </CardHeader>
@@ -106,12 +106,12 @@ export const ResultCard = ({ result }: ResultCardProps) => {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-2 pt-2">
-          <Button variant="outline" size="sm" className="flex-1">
+        <div className="flex flex-col sm:flex-row gap-2 pt-2">
+          <Button variant="outline" size="sm" className="flex-1 touch-target">
             <ExternalLink className="w-4 h-4 mr-2" />
             View Source
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="touch-target">
             Report Issue
           </Button>
         </div>

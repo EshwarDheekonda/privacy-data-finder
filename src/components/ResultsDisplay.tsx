@@ -1,11 +1,13 @@
 import { useState, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { SearchResult, SearchResponse } from '@/lib/api';
 import { ResultCard } from './ResultCard';
 import { SelectionControls } from './SelectionControls';
 import { ResultsFilters, FilterState } from './ResultsFilters';
 import { ExtractDetailsSection } from './ExtractDetailsSection';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Globe, Users, Search } from 'lucide-react';
 
 interface ResultsDisplayProps {
@@ -19,6 +21,7 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
     riskLevels: [],
     domains: [],
   });
+  const isMobile = useIsMobile();
 
   // Debug logging
   console.log('ResultsDisplay received:', {
@@ -221,29 +224,57 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
 
       {/* Categorized Results */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="all" className="flex items-center gap-2">
-            <Search className="w-4 h-4" />
-            All Results
-            <Badge variant="secondary" className="ml-1">
-              {filteredAllResults.length}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="web" className="flex items-center gap-2">
-            <Globe className="w-4 h-4" />
-            Web Results
-            <Badge variant="secondary" className="ml-1">
-              {filteredWebResults.length}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="social" className="flex items-center gap-2">
-            <Users className="w-4 h-4" />
-            Social Media
-            <Badge variant="secondary" className="ml-1">
-              {filteredSocialResults.length}
-            </Badge>
-          </TabsTrigger>
-        </TabsList>
+        {isMobile ? (
+          <Select value={activeTab} onValueChange={setActiveTab}>
+            <SelectTrigger className="w-full mb-4">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">
+                <div className="flex items-center gap-2">
+                  <Search className="w-4 h-4" />
+                  All Results ({filteredAllResults.length})
+                </div>
+              </SelectItem>
+              <SelectItem value="web">
+                <div className="flex items-center gap-2">
+                  <Globe className="w-4 h-4" />
+                  Web Results ({filteredWebResults.length})
+                </div>
+              </SelectItem>
+              <SelectItem value="social">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  Social Media ({filteredSocialResults.length})
+                </div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        ) : (
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="all" className="flex items-center gap-2">
+              <Search className="w-4 h-4" />
+              <span className="hidden sm:inline">All Results</span>
+              <Badge variant="secondary" className="ml-1">
+                {filteredAllResults.length}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="web" className="flex items-center gap-2">
+              <Globe className="w-4 h-4" />
+              <span className="hidden sm:inline">Web Results</span>
+              <Badge variant="secondary" className="ml-1">
+                {filteredWebResults.length}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="social" className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              <span className="hidden sm:inline">Social Media</span>
+              <Badge variant="secondary" className="ml-1">
+                {filteredSocialResults.length}
+              </Badge>
+            </TabsTrigger>
+          </TabsList>
+        )}
 
         <TabsContent value="all" className="mt-6">
           <div className="grid gap-4">

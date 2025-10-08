@@ -5,6 +5,8 @@ import { ResultsDisplay } from '@/components/ResultsDisplay';
 import { ResultsProvider } from '@/contexts/ResultsContext';
 import { ProtectedResults } from '@/components/ProtectedResults';
 import { SearchResponse } from '@/lib/api';
+import { PageLayout } from '@/components/layout/PageLayout';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { ArrowLeft, Download, Share, RefreshCw } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
@@ -111,52 +113,47 @@ const Results = () => {
 
   return (
     <ResultsProvider>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-        {/* Header */}
-        <header className="glass-card border-b sticky top-0 z-50">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  onClick={handleNewSearch}
-                  className="flex items-center gap-2"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  New Search
-                </Button>
-                <div className="h-6 w-px bg-border" />
-                <h1 className="text-xl font-semibold">Privacy Assessment Results</h1>
-              </div>
+      <PageLayout>
+        <PageHeader
+          title="Privacy Assessment Results"
+          leftActions={
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleNewSearch}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">New Search</span>
+            </Button>
+          }
+          rightActions={
+            <>
+              <Button variant="outline" size="sm" onClick={handleShare} className="w-full md:w-auto">
+                <Share className="w-4 h-4 md:mr-2" />
+                <span className="hidden md:inline">Share</span>
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleExportAll} className="w-full md:w-auto">
+                <Download className="w-4 h-4 md:mr-2" />
+                <span className="hidden md:inline">Export All</span>
+              </Button>
+              <Button size="sm" onClick={handleNewSearch} className="w-full md:w-auto hidden md:flex">
+                <RefreshCw className="w-4 h-4 md:mr-2" />
+                <span className="hidden md:inline">New Search</span>
+              </Button>
+            </>
+          }
+        />
 
-              <div className="flex items-center gap-2">
-                <Button variant="outline" onClick={handleShare}>
-                  <Share className="w-4 h-4 mr-2" />
-                  Share
-                </Button>
-                <Button variant="outline" onClick={handleExportAll}>
-                  <Download className="w-4 h-4 mr-2" />
-                  Export All
-                </Button>
-                <Button onClick={handleNewSearch}>
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  New Search
-                </Button>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <main className="container mx-auto px-4 py-8">
+        <div className="py-6 md:py-8">
           <ProtectedResults 
             searchQuery={searchResponse.query}
             resultsCount={searchResponse.results?.length}
           >
             <ResultsDisplay searchResponse={searchResponse} />
           </ProtectedResults>
-        </main>
-      </div>
+        </div>
+      </PageLayout>
     </ResultsProvider>
   );
 };

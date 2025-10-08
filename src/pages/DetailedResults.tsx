@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { BackendAnalysisResponse, searchApi, handleApiError } from '@/lib/api';
 import { RISK_LEVEL_COLORS, PII_CATEGORIES, PLATFORM_COLORS } from '@/types/enhanced-backend';
 import { StatsCards } from '@/components/dashboard/StatsCards';
@@ -13,7 +14,10 @@ import { TechnicalDetails } from '@/components/dashboard/TechnicalDetails';
 import { EnhancedRiskAssessment } from '@/components/dashboard/EnhancedRiskAssessment';
 import { EnhancedRecommendations } from '@/components/dashboard/EnhancedRecommendations';
 import { EnhancedExportShare } from '@/components/dashboard/EnhancedExportShare';
-import { ArrowLeft, Download, Share, AlertTriangle, Shield, Eye, Globe, Users, FileText, Settings, TrendingUp } from 'lucide-react';
+import { PageLayout } from '@/components/layout/PageLayout';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ArrowLeft, Download, Share, AlertTriangle, Shield, Eye, Globe, Users, FileText, Settings, TrendingUp, Database } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 
@@ -24,6 +28,7 @@ const DetailedResults = () => {
   const [activeTab, setActiveTab] = useState('executive');
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchAnalysisData = async () => {
@@ -276,68 +281,110 @@ const DetailedResults = () => {
 
   const totalPIIItems = getTotalPIIItems(analysisData);
 
+  const tabOptions = [
+    { value: 'executive', label: 'Executive Summary', icon: Eye },
+    { value: 'data-discovery', label: 'Data Discovery', icon: Database },
+    { value: 'source-analysis', label: 'Source Analysis', icon: Globe },
+    { value: 'risk-assessment', label: 'Risk Assessment', icon: Shield },
+    { value: 'recommendations', label: 'Recommendations', icon: TrendingUp },
+    { value: 'technical', label: 'Technical Details', icon: Settings },
+    { value: 'export', label: 'Export & Share', icon: Download },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      {/* Header */}
-      <header className="glass-card border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                onClick={() => navigate('/results')}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Results
-              </Button>
-              <div className="h-6 w-px bg-border" />
-              <div>
-                <h1 className="text-xl font-semibold">Detailed Privacy Analysis</h1>
-                <p className="text-sm text-muted-foreground">
-                  Analysis for "{location.state?.query}"
-                </p>
-              </div>
-            </div>
+    <PageLayout>
+      <PageHeader
+        title="Detailed Privacy Analysis"
+        subtitle={`Analysis for "${location.state?.query}"`}
+        leftActions={
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/results')}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Back to Results</span>
+          </Button>
+        }
+        rightActions={
+          <>
+            <Badge variant="outline" className="flex items-center gap-1 w-full md:w-auto justify-center">
+              <Shield className="w-3 h-3" />
+              <span className="text-xs">Risk: {analysisData.risk_score}/15</span>
+            </Badge>
+            <Badge className={`${getRiskLevelColor(analysisData.risk_level)} w-full md:w-auto justify-center`}>
+              {analysisData.risk_level}
+            </Badge>
+            <Button variant="outline" size="sm" onClick={handleShareResults} className="w-full md:w-auto">
+              <Share className="w-4 h-4 md:mr-2" />
+              <span className="hidden md:inline">Share</span>
+            </Button>
+            <Button size="sm" onClick={handleExportReport} className="w-full md:w-auto">
+              <Download className="w-4 h-4 md:mr-2" />
+              <span className="hidden md:inline">Export</span>
+            </Button>
+          </>
+        }
+      />
 
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="flex items-center gap-1">
-                <Shield className="w-3 h-3" />
-                Risk Score: {analysisData.risk_score}/15
-              </Badge>
-              <Badge className={getRiskLevelColor(analysisData.risk_level)}>
-                {analysisData.risk_level}
-              </Badge>
-              <Button variant="outline" onClick={handleShareResults}>
-                <Share className="w-4 h-4 mr-2" />
-                Share
-              </Button>
-              <Button onClick={handleExportReport}>
-                <Download className="w-4 h-4 mr-2" />
-                Export Report
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <div className="space-y-8">
+      <div className="py-6 md:py-8">
+        <div className="space-y-6 md:space-y-8">
           {/* Enhanced Stats Dashboard */}
           <StatsCards data={analysisData} />
 
           {/* Enhanced Tabbed Content */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-7 text-xs">
-              <TabsTrigger value="executive">Executive</TabsTrigger>
-              <TabsTrigger value="data-discovery">Data Discovery</TabsTrigger>
-              <TabsTrigger value="source-analysis">Source Analysis</TabsTrigger>
-              <TabsTrigger value="risk-assessment">Risk Assessment</TabsTrigger>
-              <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-              <TabsTrigger value="technical">Technical</TabsTrigger>
-              <TabsTrigger value="export">Export & Share</TabsTrigger>
-            </TabsList>
+            {isMobile ? (
+              <Select value={activeTab} onValueChange={setActiveTab}>
+                <SelectTrigger className="w-full mb-4">
+                  <SelectValue>
+                    {tabOptions.find(t => t.value === activeTab)?.label}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {tabOptions.map((tab) => (
+                    <SelectItem key={tab.value} value={tab.value}>
+                      <div className="flex items-center gap-2">
+                        <tab.icon className="w-4 h-4" />
+                        {tab.label}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 text-xs gap-1">
+                <TabsTrigger value="executive" className="text-[10px] sm:text-xs">
+                  <Eye className="w-3 h-3 mr-1" />
+                  <span className="hidden lg:inline">Executive</span>
+                </TabsTrigger>
+                <TabsTrigger value="data-discovery" className="text-[10px] sm:text-xs">
+                  <Database className="w-3 h-3 mr-1" />
+                  <span className="hidden lg:inline">Data</span>
+                </TabsTrigger>
+                <TabsTrigger value="source-analysis" className="text-[10px] sm:text-xs">
+                  <Globe className="w-3 h-3 mr-1" />
+                  <span className="hidden lg:inline">Sources</span>
+                </TabsTrigger>
+                <TabsTrigger value="risk-assessment" className="text-[10px] sm:text-xs">
+                  <Shield className="w-3 h-3 mr-1" />
+                  <span className="hidden lg:inline">Risk</span>
+                </TabsTrigger>
+                <TabsTrigger value="recommendations" className="text-[10px] sm:text-xs lg:col-start-1 lg:col-span-1">
+                  <TrendingUp className="w-3 h-3 mr-1" />
+                  <span className="hidden lg:inline">Tips</span>
+                </TabsTrigger>
+                <TabsTrigger value="technical" className="text-[10px] sm:text-xs">
+                  <Settings className="w-3 h-3 mr-1" />
+                  <span className="hidden lg:inline">Technical</span>
+                </TabsTrigger>
+                <TabsTrigger value="export" className="text-[10px] sm:text-xs">
+                  <Download className="w-3 h-3 mr-1" />
+                  <span className="hidden lg:inline">Export</span>
+                </TabsTrigger>
+              </TabsList>
+            )}
 
             {/* Tab 1: Executive Summary */}
             <TabsContent value="executive" className="mt-6">
@@ -512,8 +559,8 @@ const DetailedResults = () => {
             </TabsContent>
           </Tabs>
         </div>
-      </main>
-    </div>
+      </div>
+    </PageLayout>
   );
 };
 

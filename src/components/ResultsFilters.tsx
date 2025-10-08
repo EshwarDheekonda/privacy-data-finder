@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { SearchResult } from '@/lib/api';
 import { Filter, X } from 'lucide-react';
 import { useState } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ResultsFiltersProps {
   results: SearchResult[];
@@ -26,6 +27,7 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
     riskLevels: [],
     domains: [],
   });
+  const isMobile = useIsMobile();
 
   // Extract unique values from results
   const uniquePlatforms = [...new Set((results || []).map(r => r.source))];
@@ -86,7 +88,7 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
         <Button
           variant="outline"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 touch-target"
         >
           <Filter className="w-4 h-4" />
           Filters
@@ -98,88 +100,170 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
         </Button>
 
         {activeFilterCount > 0 && (
-          <Button variant="ghost" size="sm" onClick={clearAllFilters}>
+          <Button variant="ghost" size="sm" onClick={clearAllFilters} className="touch-target">
             <X className="w-4 h-4 mr-2" />
             Clear All
           </Button>
         )}
       </div>
 
-      {isOpen && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Filter Results</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Platform Filter */}
-            <div>
-              <Label className="text-sm font-medium mb-3 block">Platform</Label>
-              <div className="space-y-2">
-                {uniquePlatforms.map(platform => (
-                  <div key={platform} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`platform-${platform}`}
-                      checked={filters.platforms.includes(platform)}
-                      onCheckedChange={() => togglePlatform(platform)}
-                    />
-                    <Label
-                      htmlFor={`platform-${platform}`}
-                      className="text-sm cursor-pointer"
-                    >
-                      {platform}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Risk Level Filter */}
-            <div>
-              <Label className="text-sm font-medium mb-3 block">Risk Level</Label>
-              <div className="space-y-2">
-                {riskLevels.map(riskLevel => (
-                  <div key={riskLevel} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`risk-${riskLevel}`}
-                      checked={filters.riskLevels.includes(riskLevel)}
-                      onCheckedChange={() => toggleRiskLevel(riskLevel)}
-                    />
-                    <Label
-                      htmlFor={`risk-${riskLevel}`}
-                      className="text-sm cursor-pointer capitalize"
-                    >
-                      {riskLevel}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Domain Filter */}
-            {uniqueDomains.length > 1 && (
+      {isMobile ? (
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetContent side="left" className="w-[300px] overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Filter Results</SheetTitle>
+            </SheetHeader>
+            <div className="mt-6 space-y-6">
+              {/* Platform Filter */}
               <div>
-                <Label className="text-sm font-medium mb-3 block">Domain</Label>
+                <Label className="text-sm font-medium mb-3 block">Platform</Label>
                 <div className="space-y-2">
-                  {uniqueDomains.map(domain => (
-                    <div key={domain} className="flex items-center space-x-2">
+                  {uniquePlatforms.map(platform => (
+                    <div key={platform} className="flex items-center space-x-2">
                       <Checkbox
-                        id={`domain-${domain}`}
-                        checked={filters.domains.includes(domain)}
-                        onCheckedChange={() => toggleDomain(domain)}
+                        id={`platform-${platform}`}
+                        checked={filters.platforms.includes(platform)}
+                        onCheckedChange={() => togglePlatform(platform)}
+                        className="touch-target"
                       />
                       <Label
-                        htmlFor={`domain-${domain}`}
+                        htmlFor={`platform-${platform}`}
                         className="text-sm cursor-pointer"
                       >
-                        {domain}
+                        {platform}
                       </Label>
                     </div>
                   ))}
                 </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
+
+              {/* Risk Level Filter */}
+              <div>
+                <Label className="text-sm font-medium mb-3 block">Risk Level</Label>
+                <div className="space-y-2">
+                  {riskLevels.map(riskLevel => (
+                    <div key={riskLevel} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`risk-${riskLevel}`}
+                        checked={filters.riskLevels.includes(riskLevel)}
+                        onCheckedChange={() => toggleRiskLevel(riskLevel)}
+                        className="touch-target"
+                      />
+                      <Label
+                        htmlFor={`risk-${riskLevel}`}
+                        className="text-sm cursor-pointer capitalize"
+                      >
+                        {riskLevel}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Domain Filter */}
+              {uniqueDomains.length > 1 && (
+                <div>
+                  <Label className="text-sm font-medium mb-3 block">Domain</Label>
+                  <div className="space-y-2">
+                    {uniqueDomains.map(domain => (
+                      <div key={domain} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`domain-${domain}`}
+                          checked={filters.domains.includes(domain)}
+                          onCheckedChange={() => toggleDomain(domain)}
+                          className="touch-target"
+                        />
+                        <Label
+                          htmlFor={`domain-${domain}`}
+                          className="text-sm cursor-pointer"
+                        >
+                          {domain}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
+      ) : (
+        isOpen && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Filter Results</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Platform Filter */}
+              <div>
+                <Label className="text-sm font-medium mb-3 block">Platform</Label>
+                <div className="space-y-2">
+                  {uniquePlatforms.map(platform => (
+                    <div key={platform} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`platform-${platform}`}
+                        checked={filters.platforms.includes(platform)}
+                        onCheckedChange={() => togglePlatform(platform)}
+                      />
+                      <Label
+                        htmlFor={`platform-${platform}`}
+                        className="text-sm cursor-pointer"
+                      >
+                        {platform}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Risk Level Filter */}
+              <div>
+                <Label className="text-sm font-medium mb-3 block">Risk Level</Label>
+                <div className="space-y-2">
+                  {riskLevels.map(riskLevel => (
+                    <div key={riskLevel} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`risk-${riskLevel}`}
+                        checked={filters.riskLevels.includes(riskLevel)}
+                        onCheckedChange={() => toggleRiskLevel(riskLevel)}
+                      />
+                      <Label
+                        htmlFor={`risk-${riskLevel}`}
+                        className="text-sm cursor-pointer capitalize"
+                      >
+                        {riskLevel}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Domain Filter */}
+              {uniqueDomains.length > 1 && (
+                <div>
+                  <Label className="text-sm font-medium mb-3 block">Domain</Label>
+                  <div className="space-y-2">
+                    {uniqueDomains.map(domain => (
+                      <div key={domain} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`domain-${domain}`}
+                          checked={filters.domains.includes(domain)}
+                          onCheckedChange={() => toggleDomain(domain)}
+                        />
+                        <Label
+                          htmlFor={`domain-${domain}`}
+                          className="text-sm cursor-pointer"
+                        >
+                          {domain}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )
       )}
     </div>
   );
