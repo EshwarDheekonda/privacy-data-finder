@@ -45,7 +45,7 @@ export const ResultCard = ({ result }: ResultCardProps) => {
 
   return (
     <Card className={cn(
-      "transition-all duration-200 hover:shadow-md",
+      "glass-card transition-all duration-200 hover:shadow-lg",
       selected && "ring-2 ring-primary ring-offset-2"
     )}>
       <CardHeader className="px-4 sm:px-6 py-5 sm:py-4 pb-4 sm:pb-3">
