@@ -1,10 +1,9 @@
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SearchResult } from '@/lib/api';
 import { useResults } from '@/contexts/ResultsContext';
-import { Calendar, ExternalLink, Globe, Shield, AlertTriangle } from 'lucide-react';
+import { Calendar, Globe, Shield, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ResultCardProps {
@@ -118,17 +117,6 @@ export const ResultCard = ({ result }: ResultCardProps) => {
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="w-4 h-4" />
           <span>Found: {new Date(result.found_at).toLocaleDateString()}</span>
-        </div>
-
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-2 pt-2">
-          <Button variant="outline" size="sm" className="w-full sm:flex-1 h-12 text-base sm:h-9 sm:text-sm">
-            <ExternalLink className="w-4 h-4 mr-2" />
-            View Source
-          </Button>
-          <Button variant="outline" size="sm" className="w-full sm:w-auto h-12 text-base sm:h-9 sm:text-sm">
-            Report Issue
-          </Button>
         </div>
       </CardContent>
     </Card>
