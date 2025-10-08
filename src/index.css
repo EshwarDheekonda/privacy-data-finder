@@ -80,7 +80,7 @@
     --gradient-primary: linear-gradient(135deg, hsl(264 69% 52%), hsl(264 69% 68%));
     --gradient-secondary: linear-gradient(135deg, hsl(156 65% 48%), hsl(156 65% 70%));
     --gradient-hero: radial-gradient(ellipse at top, hsl(210 30% 3%), hsl(264 40% 8%), hsl(210 25% 5%));
-    --gradient-glass: linear-gradient(135deg, hsla(210, 40%, 2%, 0.08), hsla(210, 38%, 1%, 0.12));
+    --gradient-glass: linear-gradient(135deg, hsla(210, 40%, 2%, 0.05), hsla(210, 38%, 1%, 0.09));
     --gradient-glow: radial-gradient(circle at center, hsla(264, 69%, 52%, 0.4), transparent 70%);
     --gradient-warm: linear-gradient(135deg, hsl(215 20% 5%), hsl(220 18% 8%));
     --gradient-cool: linear-gradient(135deg, hsl(205 28% 4%), hsl(200 25% 7%));
@@ -734,7 +734,7 @@
   @media (max-width: 768px) {
     .glass-card {
       /* Slightly increase opacity only on mobile for readability */
-      background: linear-gradient(135deg, hsla(210, 40%, 2%, 0.15), hsla(210, 38%, 1%, 0.22));
+      background: linear-gradient(135deg, hsla(210, 40%, 2%, 0.08), hsla(210, 38%, 1%, 0.10));
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
     }
@@ -779,7 +779,7 @@
 
   @media (prefers-color-scheme: light) {
     .glass-card {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), rgba(245, 245, 250, 0.15));
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(245, 245, 250, 0.09));
       border: 1px solid rgba(0, 0, 0, 0.05);
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.5);
     }
