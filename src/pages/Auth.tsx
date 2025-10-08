@@ -10,12 +10,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
-import { Loader2, Mail, Lock, User, Chrome, ArrowLeft, Info, Timer } from 'lucide-react';
+import { Loader2, Mail, Lock, User, ArrowLeft, Info, Timer } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
@@ -37,7 +36,6 @@ type SignInFormData = z.infer<typeof signInSchema>;
 
 export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [isSendingReset, setIsSendingReset] = useState(false);
@@ -56,7 +54,7 @@ export default function Auth() {
   const [canResendOTP, setCanResendOTP] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   
-  const { user, signIn, signInWithGoogle } = useAuth();
+  const { user, signIn } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -227,19 +225,6 @@ export default function Auth() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    setIsGoogleLoading(true);
-    try {
-      const { error } = await signInWithGoogle();
-      if (error) {
-        toast({ title: 'Google sign in failed', description: error.message, variant: 'destructive' });
-        setIsGoogleLoading(false);
-      }
-    } catch (error) {
-      toast({ title: 'Unexpected error', variant: 'destructive' });
-      setIsGoogleLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
@@ -364,11 +349,9 @@ export default function Auth() {
                         </Button>
                       </form>
                     </Form>
-                    <Button variant="outline" disabled={isGoogleLoading} className="w-full" onClick={handleGoogleSignIn}>
-                      {isGoogleLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Signing In...</> : <><Chrome className="mr-2 h-4 w-4" />Sign In with Google</>}
-                    </Button>
-                    <Separator />
-                    <Button variant="link" className="px-0 w-fit" onClick={() => setShowForgotPassword(true)}>Forgot password?</Button>
+                    <div className="mt-4">
+                      <Button variant="link" className="px-0 w-fit" onClick={() => setShowForgotPassword(true)}>Forgot password?</Button>
+                    </div>
                   </TabsContent>
 
                   <TabsContent value="signup" className="space-y-4">
