@@ -37,7 +37,11 @@ const Index = () => {
 
   const handleGetStartedClick = () => {
     if (DEBUG_UI) console.log("🔘 Get Started clicked");
-    setSearchParams({ auth: 'signup' });
+    
+    // Focus on the search input
+    if (heroRef.current) {
+      heroRef.current.focusSearchInput();
+    }
   };
 
   if (DEBUG_UI) console.log("🔄 Index.tsx: Rendering with status:", renderStatus);
