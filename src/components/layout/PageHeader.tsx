@@ -64,12 +64,12 @@ export const PageHeader = ({
             {rightActions && (
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm" className="shrink-0">
+                  <Button variant="ghost" size="sm" className="shrink-0 touch-target">
                     <Menu className="w-5 h-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-72">
-                  <div className="flex flex-col gap-2 mt-6">
+                <SheetContent side="right" className="w-80 sm:w-96">
+                  <div className="flex flex-col gap-3 mt-8">
                     {rightActions}
                   </div>
                 </SheetContent>
@@ -80,10 +80,10 @@ export const PageHeader = ({
           {(title || subtitle) && (
             <div className="min-w-0">
               {typeof title === 'string' ? (
-                <h1 className="text-lg font-semibold truncate">{title}</h1>
+                <h1 className="text-xl font-semibold truncate leading-tight">{title}</h1>
               ) : title}
               {subtitle && (
-                <p className="text-sm text-muted-foreground truncate">{subtitle}</p>
+                <p className="text-sm text-muted-foreground truncate leading-relaxed mt-1">{subtitle}</p>
               )}
             </div>
           )}

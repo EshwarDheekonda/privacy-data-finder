@@ -26,6 +26,14 @@ export default {
 			'2xl': '1536px',
 		},
 		extend: {
+			spacing: {
+				'18': '4.5rem',
+				'88': '22rem',
+			},
+			lineHeight: {
+				'tight': '1.25',
+				'relaxed': '1.625',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

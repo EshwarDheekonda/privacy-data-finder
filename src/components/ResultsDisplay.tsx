@@ -189,26 +189,26 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
   return (
     <div className="space-y-6">
       {/* Search Summary */}
-      <div className="glass-card p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold">Privacy Assessment Results</h2>
-          <Badge variant="outline" className="text-sm">
+      <div className="glass-card p-5 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <h2 className="text-xl sm:text-2xl font-bold">Privacy Assessment Results</h2>
+          <Badge variant="outline" className="text-sm w-fit">
             Scan completed in {searchResponse.scan_time}s
           </Badge>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-          <div className="flex items-center gap-2">
-            <Search className="w-4 h-4 text-muted-foreground" />
-            <span>Query: <span className="font-medium">{searchResponse.query}</span></span>
+        <div className="grid grid-cols-1 gap-3 md:gap-4 text-sm">
+          <div className="flex items-center gap-3">
+            <Search className="w-5 h-5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
+            <span className="leading-relaxed">Query: <span className="font-medium">{searchResponse.query}</span></span>
           </div>
-          <div className="flex items-center gap-2">
-            <Globe className="w-4 h-4 text-muted-foreground" />
-            <span>Total Results: <span className="font-medium">{searchResponse.results.length}</span></span>
+          <div className="flex items-center gap-3">
+            <Globe className="w-5 h-5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
+            <span className="leading-relaxed">Total Results: <span className="font-medium">{searchResponse.results.length}</span></span>
           </div>
-          <div className="flex items-center gap-2">
-            <Users className="w-4 h-4 text-muted-foreground" />
-            <span>Timestamp: <span className="font-medium">{new Date(searchResponse.timestamp).toLocaleString()}</span></span>
+          <div className="flex items-center gap-3">
+            <Users className="w-5 h-5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
+            <span className="leading-relaxed">Timestamp: <span className="font-medium">{new Date(searchResponse.timestamp).toLocaleString()}</span></span>
           </div>
         </div>
       </div>
@@ -226,26 +226,26 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         {isMobile ? (
           <Select value={activeTab} onValueChange={setActiveTab}>
-            <SelectTrigger className="w-full mb-4">
+            <SelectTrigger className="w-full mb-4 h-12 text-base bg-muted/30">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">
-                <div className="flex items-center gap-2">
-                  <Search className="w-4 h-4" />
-                  All Results ({filteredAllResults.length})
+            <SelectContent className="bg-card">
+              <SelectItem value="all" className="text-base py-3">
+                <div className="flex items-center gap-3">
+                  <Search className="w-5 h-5" />
+                  <span>All Results ({filteredAllResults.length})</span>
                 </div>
               </SelectItem>
-              <SelectItem value="web">
-                <div className="flex items-center gap-2">
-                  <Globe className="w-4 h-4" />
-                  Web Results ({filteredWebResults.length})
+              <SelectItem value="web" className="text-base py-3">
+                <div className="flex items-center gap-3">
+                  <Globe className="w-5 h-5" />
+                  <span>Web Results ({filteredWebResults.length})</span>
                 </div>
               </SelectItem>
-              <SelectItem value="social">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  Social Media ({filteredSocialResults.length})
+              <SelectItem value="social" className="text-base py-3">
+                <div className="flex items-center gap-3">
+                  <Users className="w-5 h-5" />
+                  <span>Social Media ({filteredSocialResults.length})</span>
                 </div>
               </SelectItem>
             </SelectContent>
@@ -277,7 +277,7 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
         )}
 
         <TabsContent value="all" className="mt-6">
-          <div className="grid gap-4">
+          <div className="grid gap-6 sm:gap-4 pb-4">
             {filteredAllResults.map(result => (
               <ResultCard key={result.id} result={result} />
             ))}
@@ -291,7 +291,7 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
         </TabsContent>
 
         <TabsContent value="web" className="mt-6">
-          <div className="grid gap-4">
+          <div className="grid gap-6 sm:gap-4 pb-4">
             {filteredWebResults.map(result => (
               <ResultCard key={result.id} result={result} />
             ))}
@@ -305,7 +305,7 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
         </TabsContent>
 
         <TabsContent value="social" className="mt-6">
-          <div className="grid gap-4">
+          <div className="grid gap-6 sm:gap-4 pb-4">
             {filteredSocialResults.map(result => (
               <ResultCard key={result.id} result={result} />
             ))}

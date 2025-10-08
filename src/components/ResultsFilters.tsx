@@ -88,19 +88,19 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
         <Button
           variant="outline"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 touch-target"
+          className="flex items-center gap-2 touch-target min-h-[44px]"
         >
           <Filter className="w-4 h-4" />
-          Filters
+          <span>Filters</span>
           {activeFilterCount > 0 && (
-            <Badge variant="secondary" className="ml-2">
+            <Badge variant="secondary" className="ml-2 text-xs px-2">
               {activeFilterCount}
             </Badge>
           )}
         </Button>
 
         {activeFilterCount > 0 && (
-          <Button variant="ghost" size="sm" onClick={clearAllFilters} className="touch-target">
+          <Button variant="ghost" size="sm" onClick={clearAllFilters} className="touch-target min-h-[44px]">
             <X className="w-4 h-4 mr-2" />
             Clear All
           </Button>
@@ -109,26 +109,26 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
 
       {isMobile ? (
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetContent side="left" className="w-[300px] overflow-y-auto">
+          <SheetContent side="left" className="w-[320px] sm:w-[360px] overflow-y-auto">
             <SheetHeader>
-              <SheetTitle>Filter Results</SheetTitle>
+              <SheetTitle className="text-lg">Filter Results</SheetTitle>
             </SheetHeader>
             <div className="mt-6 space-y-6">
               {/* Platform Filter */}
               <div>
-                <Label className="text-sm font-medium mb-3 block">Platform</Label>
-                <div className="space-y-2">
+                <Label className="text-base font-medium mb-3 block">Platform</Label>
+                <div className="space-y-3">
                   {uniquePlatforms.map(platform => (
-                    <div key={platform} className="flex items-center space-x-2">
+                    <div key={platform} className="flex items-center space-x-3 min-h-[44px]">
                       <Checkbox
                         id={`platform-${platform}`}
                         checked={filters.platforms.includes(platform)}
                         onCheckedChange={() => togglePlatform(platform)}
-                        className="touch-target"
+                        className="touch-target h-5 w-5"
                       />
                       <Label
                         htmlFor={`platform-${platform}`}
-                        className="text-sm cursor-pointer"
+                        className="text-base cursor-pointer leading-relaxed flex-1"
                       >
                         {platform}
                       </Label>
@@ -139,19 +139,19 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
 
               {/* Risk Level Filter */}
               <div>
-                <Label className="text-sm font-medium mb-3 block">Risk Level</Label>
-                <div className="space-y-2">
+                <Label className="text-base font-medium mb-3 block">Risk Level</Label>
+                <div className="space-y-3">
                   {riskLevels.map(riskLevel => (
-                    <div key={riskLevel} className="flex items-center space-x-2">
+                    <div key={riskLevel} className="flex items-center space-x-3 min-h-[44px]">
                       <Checkbox
                         id={`risk-${riskLevel}`}
                         checked={filters.riskLevels.includes(riskLevel)}
                         onCheckedChange={() => toggleRiskLevel(riskLevel)}
-                        className="touch-target"
+                        className="touch-target h-5 w-5"
                       />
                       <Label
                         htmlFor={`risk-${riskLevel}`}
-                        className="text-sm cursor-pointer capitalize"
+                        className="text-base cursor-pointer capitalize leading-relaxed flex-1"
                       >
                         {riskLevel}
                       </Label>
@@ -163,19 +163,19 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
               {/* Domain Filter */}
               {uniqueDomains.length > 1 && (
                 <div>
-                  <Label className="text-sm font-medium mb-3 block">Domain</Label>
-                  <div className="space-y-2">
+                  <Label className="text-base font-medium mb-3 block">Domain</Label>
+                  <div className="space-y-3">
                     {uniqueDomains.map(domain => (
-                      <div key={domain} className="flex items-center space-x-2">
+                      <div key={domain} className="flex items-center space-x-3 min-h-[44px]">
                         <Checkbox
                           id={`domain-${domain}`}
                           checked={filters.domains.includes(domain)}
                           onCheckedChange={() => toggleDomain(domain)}
-                          className="touch-target"
+                          className="touch-target h-5 w-5"
                         />
                         <Label
                           htmlFor={`domain-${domain}`}
-                          className="text-sm cursor-pointer"
+                          className="text-base cursor-pointer leading-relaxed flex-1"
                         >
                           {domain}
                         </Label>
