@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { SearchResult, SearchResponse } from '@/lib/api';
 import { ResultCard } from './ResultCard';
 import { SelectionControls } from './SelectionControls';
@@ -189,29 +190,28 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
   return (
     <div className="space-y-6">
       {/* Search Summary */}
-      <div className="glass-card p-5 sm:p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-          <h2 className="text-xl sm:text-2xl font-bold">Privacy Assessment Results</h2>
-          <Badge variant="outline" className="text-sm w-fit">
-            Scan completed in {searchResponse.scan_time}s
-          </Badge>
-        </div>
-        
-        <div className="grid grid-cols-1 gap-3 md:gap-4 text-sm">
-          <div className="flex items-center gap-3">
-            <Search className="w-5 h-5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
-            <span className="leading-relaxed">Query: <span className="font-medium">{searchResponse.query}</span></span>
+      <Card className="glass-card">
+        <CardContent className="p-5 sm:p-4">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+            <div className="flex items-center gap-3">
+              <Search className="w-5 h-5 text-primary shrink-0" />
+              <div className="min-w-0">
+                <p className="text-sm text-muted-foreground leading-relaxed">Search Query</p>
+                <p className="font-medium text-base sm:text-sm truncate">{searchResponse.query}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Globe className="w-5 h-5 text-primary shrink-0" />
+              <div className="min-w-0">
+                <p className="text-sm text-muted-foreground leading-relaxed">Scan Completed</p>
+                <p className="font-medium text-base sm:text-sm">
+                  {new Date(searchResponse.timestamp).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Globe className="w-5 h-5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
-            <span className="leading-relaxed">Total Results: <span className="font-medium">{searchResponse.results.length}</span></span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Users className="w-5 h-5 sm:w-4 sm:h-4 text-muted-foreground shrink-0" />
-            <span className="leading-relaxed">Timestamp: <span className="font-medium">{new Date(searchResponse.timestamp).toLocaleString()}</span></span>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <ResultsFilters results={searchResponse.results} onFilterChange={setFilters} />
@@ -226,93 +226,84 @@ export const ResultsDisplay = ({ searchResponse }: ResultsDisplayProps) => {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         {isMobile ? (
           <Select value={activeTab} onValueChange={setActiveTab}>
-            <SelectTrigger className="w-full mb-4 h-12 text-base bg-muted/30">
+            <SelectTrigger className="h-14 text-base px-4 sm:h-12 bg-muted/30 flex items-center gap-3">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-card">
-              <SelectItem value="all" className="text-base py-3">
-                <div className="flex items-center gap-3">
-                  <Search className="w-5 h-5" />
+            <SelectContent className="max-h-[300px] overflow-y-auto">
+              <SelectItem value="all" className="py-4 text-base sm:py-3 sm:text-sm">
+                <div className="flex items-center gap-2">
+                  <Search className="w-4 h-4" />
                   <span>All Results ({filteredAllResults.length})</span>
                 </div>
               </SelectItem>
-              <SelectItem value="web" className="text-base py-3">
-                <div className="flex items-center gap-3">
-                  <Globe className="w-5 h-5" />
+              <SelectItem value="web" className="py-4 text-base sm:py-3 sm:text-sm">
+                <div className="flex items-center gap-2">
+                  <Globe className="w-4 h-4" />
                   <span>Web Results ({filteredWebResults.length})</span>
                 </div>
               </SelectItem>
-              <SelectItem value="social" className="text-base py-3">
-                <div className="flex items-center gap-3">
-                  <Users className="w-5 h-5" />
+              <SelectItem value="social" className="py-4 text-base sm:py-3 sm:text-sm">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4" />
                   <span>Social Media ({filteredSocialResults.length})</span>
                 </div>
               </SelectItem>
             </SelectContent>
           </Select>
         ) : (
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="all" className="flex items-center gap-2">
+          <TabsList className="grid grid-cols-3 w-full h-12 sm:h-10 md:w-auto md:inline-grid">
+            <TabsTrigger value="all" className="flex items-center gap-2 text-sm sm:text-sm px-4 sm:px-3">
               <Search className="w-4 h-4" />
-              <span className="hidden sm:inline">All Results</span>
-              <Badge variant="secondary" className="ml-1">
-                {filteredAllResults.length}
-              </Badge>
+              <span>All ({filteredAllResults.length})</span>
             </TabsTrigger>
-            <TabsTrigger value="web" className="flex items-center gap-2">
+            <TabsTrigger value="web" className="flex items-center gap-2 text-sm sm:text-sm px-4 sm:px-3">
               <Globe className="w-4 h-4" />
-              <span className="hidden sm:inline">Web Results</span>
-              <Badge variant="secondary" className="ml-1">
-                {filteredWebResults.length}
-              </Badge>
+              <span>Web ({filteredWebResults.length})</span>
             </TabsTrigger>
-            <TabsTrigger value="social" className="flex items-center gap-2">
+            <TabsTrigger value="social" className="flex items-center gap-2 text-sm sm:text-sm px-4 sm:px-3">
               <Users className="w-4 h-4" />
-              <span className="hidden sm:inline">Social Media</span>
-              <Badge variant="secondary" className="ml-1">
-                {filteredSocialResults.length}
-              </Badge>
+              <span>Social ({filteredSocialResults.length})</span>
             </TabsTrigger>
           </TabsList>
         )}
 
         <TabsContent value="all" className="mt-6">
-          <div className="grid gap-6 sm:gap-4 pb-4">
+          <div className="grid gap-8 md:gap-6 lg:gap-4 pb-8 md:pb-6">
             {filteredAllResults.map(result => (
               <ResultCard key={result.id} result={result} />
             ))}
             {filteredAllResults.length === 0 && (
               <div className="text-center py-12 text-muted-foreground">
-                <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No results match the current filters.</p>
+                <Search className="w-20 h-20 sm:w-12 sm:h-12 mx-auto mb-4 opacity-50" />
+                <p className="text-base sm:text-sm">No results match the current filters.</p>
               </div>
             )}
           </div>
         </TabsContent>
 
         <TabsContent value="web" className="mt-6">
-          <div className="grid gap-6 sm:gap-4 pb-4">
+          <div className="grid gap-8 md:gap-6 lg:gap-4 pb-8 md:pb-6">
             {filteredWebResults.map(result => (
               <ResultCard key={result.id} result={result} />
             ))}
             {filteredWebResults.length === 0 && (
               <div className="text-center py-12 text-muted-foreground">
-                <Globe className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No web results match the current filters.</p>
+                <Globe className="w-20 h-20 sm:w-12 sm:h-12 mx-auto mb-4 opacity-50" />
+                <p className="text-base sm:text-sm">No web results match the current filters.</p>
               </div>
             )}
           </div>
         </TabsContent>
 
         <TabsContent value="social" className="mt-6">
-          <div className="grid gap-6 sm:gap-4 pb-4">
+          <div className="grid gap-8 md:gap-6 lg:gap-4 pb-8 md:pb-6">
             {filteredSocialResults.map(result => (
               <ResultCard key={result.id} result={result} />
             ))}
             {filteredSocialResults.length === 0 && (
               <div className="text-center py-12 text-muted-foreground">
-                <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>No social media results match the current filters.</p>
+                <Users className="w-20 h-20 sm:w-12 sm:h-12 mx-auto mb-4 opacity-50" />
+                <p className="text-base sm:text-sm">No social media results match the current filters.</p>
               </div>
             )}
           </div>

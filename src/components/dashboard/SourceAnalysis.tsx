@@ -175,12 +175,12 @@ export const SourceAnalysis = ({ data }: SourceAnalysisProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-64">
+          <div className="h-80 sm:h-72 md:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={platformData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
+                <XAxis dataKey="name" style={{ fontSize: '14px' }} />
+                <YAxis style={{ fontSize: '14px' }} />
                 <Tooltip />
                 <Bar dataKey="successful" fill="#10b981" name="Successful" />
                 <Bar dataKey="failed" fill="#ef4444" name="Failed" />
@@ -270,17 +270,17 @@ export const SourceAnalysis = ({ data }: SourceAnalysisProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <table className="w-full min-w-[800px]">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-3 px-2">Source</th>
-                  <th className="text-left py-3 px-2">Type</th>
-                  <th className="text-left py-3 px-2">Status</th>
-                  <th className="text-left py-3 px-2">Data Points</th>
-                  <th className="text-left py-3 px-2">Scraper</th>
-                  <th className="text-left py-3 px-2">Platform</th>
-                  <th className="text-left py-3 px-2">Action</th>
+                  <th className="text-left py-4 px-3 sm:py-3 sm:px-2 text-sm">Source</th>
+                  <th className="text-left py-4 px-3 sm:py-3 sm:px-2 text-sm">Type</th>
+                  <th className="text-left py-4 px-3 sm:py-3 sm:px-2 text-sm">Status</th>
+                  <th className="text-left py-4 px-3 sm:py-3 sm:px-2 text-sm">Data Points</th>
+                  <th className="text-left py-4 px-3 sm:py-3 sm:px-2 text-sm">Scraper</th>
+                  <th className="text-left py-4 px-3 sm:py-3 sm:px-2 text-sm">Platform</th>
+                  <th className="text-left py-4 px-3 sm:py-3 sm:px-2 text-sm">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -297,7 +297,7 @@ export const SourceAnalysis = ({ data }: SourceAnalysisProps) => {
                       transition={{ delay: index * 0.05 }}
                       className="border-b hover:bg-muted/30 transition-colors"
                     >
-                      <td className="py-3 px-2">
+                      <td className="py-4 px-3 sm:py-3 sm:px-2">
                         <div className="max-w-xs truncate text-sm" title={detail.source}>
                           {detail.source}
                         </div>
@@ -307,18 +307,18 @@ export const SourceAnalysis = ({ data }: SourceAnalysisProps) => {
                           </div>
                         )}
                       </td>
-                      <td className="py-3 px-2">
+                      <td className="py-4 px-3 sm:py-3 sm:px-2">
                         <Badge variant="outline" className="capitalize">
                           {detail.type.replace('_', ' ')}
                         </Badge>
                       </td>
-                      <td className="py-3 px-2">
+                      <td className="py-4 px-3 sm:py-3 sm:px-2">
                         <Badge className={statusDisplay.color}>
                           <StatusIcon className="w-3 h-3 mr-1" />
                           {statusDisplay.label}
                         </Badge>
                       </td>
-                      <td className="py-3 px-2">
+                      <td className="py-4 px-3 sm:py-3 sm:px-2">
                         <div className="flex items-center gap-1">
                           <Database className="w-3 h-3 text-muted-foreground" />
                           <span className="text-sm font-medium">
@@ -326,18 +326,18 @@ export const SourceAnalysis = ({ data }: SourceAnalysisProps) => {
                           </span>
                         </div>
                       </td>
-                      <td className="py-3 px-2">
+                      <td className="py-4 px-3 sm:py-3 sm:px-2">
                         <Badge className={scraperDisplay.color}>
                           <Zap className="w-3 h-3 mr-1" />
                           {scraperDisplay.label}
                         </Badge>
                       </td>
-                      <td className="py-3 px-2">
+                      <td className="py-4 px-3 sm:py-3 sm:px-2">
                         <span className="text-sm capitalize">
                           {detail.platform || 'Unknown'}
                         </span>
                       </td>
-                      <td className="py-3 px-2">
+                      <td className="py-4 px-3 sm:py-3 sm:px-2">
                         <Button 
                           variant="ghost" 
                           size="sm"

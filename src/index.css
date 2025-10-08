@@ -712,6 +712,47 @@
       display: none;
     }
   }
+
+  /* Mobile-optimized components */
+  @media (max-width: 768px) {
+    .glass-card {
+      background: rgba(10, 10, 15, 0.95); /* More opaque */
+      backdrop-filter: blur(12px); /* Increased blur */
+      border: 1px solid rgba(255, 255, 255, 0.15); /* More visible border */
+    }
+    
+    .result-card-mobile {
+      padding: 1rem;
+    }
+    
+    .result-card-title {
+      font-size: 1rem;
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+    
+    .result-card-description {
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+    
+    .touch-target-lg {
+      min-height: 48px;
+      min-width: 48px;
+    }
+    
+    .touch-button {
+      min-height: 48px;
+      padding: 0.75rem 1.25rem;
+    }
+  }
+
+  @media (prefers-color-scheme: light) {
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+  }
 }
 
 @keyframes float {

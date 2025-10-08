@@ -115,7 +115,7 @@ export const ExecutiveSummary = ({ data }: ExecutiveSummaryProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             <div>
               <div className="flex items-center gap-4 mb-4">
                 <div className="text-center">
@@ -142,7 +142,7 @@ export const ExecutiveSummary = ({ data }: ExecutiveSummaryProps) => {
                 </div>
               </div>
             </div>
-            <div className="h-32">
+            <div className="h-48 sm:h-40 md:h-32">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie

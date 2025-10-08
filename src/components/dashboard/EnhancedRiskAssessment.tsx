@@ -138,11 +138,11 @@ export const EnhancedRiskAssessment = ({ data }: EnhancedRiskAssessmentProps) =>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 gap-8">
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <div className="text-center">
-                  <div className="text-6xl font-bold text-primary mb-2">
+                  <div className="text-7xl sm:text-6xl lg:text-6xl font-bold text-primary mb-2">
                     {riskScore}
                   </div>
                   <div className="text-sm text-muted-foreground">out of 15</div>
@@ -164,7 +164,7 @@ export const EnhancedRiskAssessment = ({ data }: EnhancedRiskAssessmentProps) =>
               </div>
             </div>
 
-            <div className="h-48">
+            <div className="h-64 sm:h-56 md:h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <RadialBarChart cx="50%" cy="50%" innerRadius="60%" outerRadius="90%" data={riskGaugeData}>
                   <RadialBar dataKey="value" cornerRadius={10} fill={riskGaugeData[0].fill} />
@@ -184,12 +184,12 @@ export const EnhancedRiskAssessment = ({ data }: EnhancedRiskAssessmentProps) =>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-64">
+          <div className="h-96 sm:h-80 md:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={categoryRisks} layout="horizontal">
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" />
-                <YAxis dataKey="name" type="category" width={120} />
+                <XAxis type="number" style={{ fontSize: '14px' }} />
+                <YAxis dataKey="name" type="category" width={140} style={{ fontSize: '14px' }} />
                 <Tooltip />
                 <Bar dataKey="risk" fill="#3b82f6" />
               </BarChart>
@@ -255,7 +255,7 @@ export const EnhancedRiskAssessment = ({ data }: EnhancedRiskAssessmentProps) =>
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="p-4 bg-muted/50 rounded-lg"
+                  className="p-5 sm:p-4 bg-muted/50 rounded-lg"
                 >
                   <div className="font-semibold text-sm mb-2 flex items-center gap-2">
                     {category === 'High Risk' && <AlertTriangle className="w-4 h-4 text-red-500" />}
@@ -264,7 +264,7 @@ export const EnhancedRiskAssessment = ({ data }: EnhancedRiskAssessmentProps) =>
                     {category === 'Social Media' && <TrendingUp className="w-4 h-4 text-blue-500" />}
                     {category}
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-base sm:text-sm text-muted-foreground leading-relaxed">
                     {analysis}
                   </p>
                 </motion.div>

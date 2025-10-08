@@ -92,7 +92,7 @@ export const StatsCards = ({ data }: StatsCardsProps) => {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-4 lg:gap-4">
       {cards.map((card, index) => (
         <motion.div
           key={card.title}
@@ -101,21 +101,21 @@ export const StatsCards = ({ data }: StatsCardsProps) => {
           transition={{ delay: index * 0.1 }}
         >
           <Card className="hover:shadow-lg transition-all duration-300">
-            <CardContent className="p-6">
+            <CardContent className="p-6 sm:p-5 lg:p-4">
               <div className="flex items-center gap-4">
                 <div className={`p-3 rounded-lg ${card.color}`}>
-                  <card.icon className="w-6 h-6" />
+                  <card.icon className="w-6 h-6 sm:w-5 sm:h-5 lg:w-4 lg:h-4" />
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-2xl font-bold">{card.value}</p>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-4xl sm:text-3xl lg:text-2xl font-bold">{card.value}</p>
                     {card.badge && (
                       <Badge variant="secondary" className="text-xs">
                         {card.badge}
                       </Badge>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground font-medium">
+                  <p className="text-base sm:text-sm text-muted-foreground font-medium">
                     {card.title}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">

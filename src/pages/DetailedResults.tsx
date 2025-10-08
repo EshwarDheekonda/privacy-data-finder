@@ -337,14 +337,14 @@ const DetailedResults = () => {
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             {isMobile ? (
               <Select value={activeTab} onValueChange={setActiveTab}>
-                <SelectTrigger className="w-full mb-4">
+                <SelectTrigger className="w-full mb-4 h-14 px-4 text-base flex items-center gap-3">
                   <SelectValue>
                     {tabOptions.find(t => t.value === activeTab)?.label}
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-[400px]">
                   {tabOptions.map((tab) => (
-                    <SelectItem key={tab.value} value={tab.value}>
+                    <SelectItem key={tab.value} value={tab.value} className="py-4 text-base">
                       <div className="flex items-center gap-2">
                         <tab.icon className="w-4 h-4" />
                         {tab.label}
@@ -354,40 +354,40 @@ const DetailedResults = () => {
                 </SelectContent>
               </Select>
             ) : (
-              <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 text-xs gap-1">
-                <TabsTrigger value="executive" className="text-[10px] sm:text-xs">
-                  <Eye className="w-3 h-3 mr-1" />
+              <TabsList className="grid w-full grid-cols-4 xl:grid-cols-7 gap-2">
+                <TabsTrigger value="executive" className="text-xs px-2 py-2 min-h-[44px]">
+                  <Eye className="w-4 h-4 mr-1" />
                   <span className="hidden lg:inline">Executive</span>
                 </TabsTrigger>
-                <TabsTrigger value="data-discovery" className="text-[10px] sm:text-xs">
-                  <Database className="w-3 h-3 mr-1" />
+                <TabsTrigger value="data-discovery" className="text-xs px-2 py-2 min-h-[44px]">
+                  <Database className="w-4 h-4 mr-1" />
                   <span className="hidden lg:inline">Data</span>
                 </TabsTrigger>
-                <TabsTrigger value="source-analysis" className="text-[10px] sm:text-xs">
-                  <Globe className="w-3 h-3 mr-1" />
+                <TabsTrigger value="source-analysis" className="text-xs px-2 py-2 min-h-[44px]">
+                  <Globe className="w-4 h-4 mr-1" />
                   <span className="hidden lg:inline">Sources</span>
                 </TabsTrigger>
-                <TabsTrigger value="risk-assessment" className="text-[10px] sm:text-xs">
-                  <Shield className="w-3 h-3 mr-1" />
+                <TabsTrigger value="risk-assessment" className="text-xs px-2 py-2 min-h-[44px]">
+                  <Shield className="w-4 h-4 mr-1" />
                   <span className="hidden lg:inline">Risk</span>
                 </TabsTrigger>
-                <TabsTrigger value="recommendations" className="text-[10px] sm:text-xs lg:col-start-1 lg:col-span-1">
-                  <TrendingUp className="w-3 h-3 mr-1" />
+                <TabsTrigger value="recommendations" className="text-xs px-2 py-2 min-h-[44px]">
+                  <TrendingUp className="w-4 h-4 mr-1" />
                   <span className="hidden lg:inline">Tips</span>
                 </TabsTrigger>
-                <TabsTrigger value="technical" className="text-[10px] sm:text-xs">
-                  <Settings className="w-3 h-3 mr-1" />
+                <TabsTrigger value="technical" className="text-xs px-2 py-2 min-h-[44px]">
+                  <Settings className="w-4 h-4 mr-1" />
                   <span className="hidden lg:inline">Technical</span>
                 </TabsTrigger>
-                <TabsTrigger value="export" className="text-[10px] sm:text-xs">
-                  <Download className="w-3 h-3 mr-1" />
+                <TabsTrigger value="export" className="text-xs px-2 py-2 min-h-[44px]">
+                  <Download className="w-4 h-4 mr-1" />
                   <span className="hidden lg:inline">Export</span>
                 </TabsTrigger>
               </TabsList>
             )}
 
             {/* Tab 1: Executive Summary */}
-            <TabsContent value="executive" className="mt-6">
+            <TabsContent value="executive" className="mt-8 sm:mt-6">
               <ExecutiveSummary data={analysisData} />
             </TabsContent>
 

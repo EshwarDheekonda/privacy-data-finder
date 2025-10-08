@@ -88,7 +88,7 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
         <Button
           variant="outline"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 touch-target min-h-[44px]"
+          className="flex items-center gap-2 h-12 sm:h-10"
         >
           <Filter className="w-4 h-4" />
           <span>Filters</span>
@@ -100,7 +100,7 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
         </Button>
 
         {activeFilterCount > 0 && (
-          <Button variant="ghost" size="sm" onClick={clearAllFilters} className="touch-target min-h-[44px]">
+          <Button variant="ghost" size="sm" onClick={clearAllFilters} className="h-12 sm:h-10">
             <X className="w-4 h-4 mr-2" />
             Clear All
           </Button>
@@ -119,16 +119,16 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
                 <Label className="text-base font-medium mb-3 block">Platform</Label>
                 <div className="space-y-3">
                   {uniquePlatforms.map(platform => (
-                    <div key={platform} className="flex items-center space-x-3 min-h-[44px]">
+                    <div key={platform} className="flex items-center space-x-2">
                       <Checkbox
                         id={`platform-${platform}`}
                         checked={filters.platforms.includes(platform)}
                         onCheckedChange={() => togglePlatform(platform)}
-                        className="touch-target h-5 w-5"
+                        className="h-5 w-5"
                       />
                       <Label
                         htmlFor={`platform-${platform}`}
-                        className="text-base cursor-pointer leading-relaxed flex-1"
+                        className="flex-1 cursor-pointer min-h-[44px] flex items-center"
                       >
                         {platform}
                       </Label>
@@ -142,16 +142,16 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
                 <Label className="text-base font-medium mb-3 block">Risk Level</Label>
                 <div className="space-y-3">
                   {riskLevels.map(riskLevel => (
-                    <div key={riskLevel} className="flex items-center space-x-3 min-h-[44px]">
+                    <div key={riskLevel} className="flex items-center space-x-2">
                       <Checkbox
                         id={`risk-${riskLevel}`}
                         checked={filters.riskLevels.includes(riskLevel)}
                         onCheckedChange={() => toggleRiskLevel(riskLevel)}
-                        className="touch-target h-5 w-5"
+                        className="h-5 w-5"
                       />
                       <Label
                         htmlFor={`risk-${riskLevel}`}
-                        className="text-base cursor-pointer capitalize leading-relaxed flex-1"
+                        className="flex-1 cursor-pointer capitalize min-h-[44px] flex items-center"
                       >
                         {riskLevel}
                       </Label>
@@ -166,16 +166,16 @@ export const ResultsFilters = ({ results, onFilterChange }: ResultsFiltersProps)
                   <Label className="text-base font-medium mb-3 block">Domain</Label>
                   <div className="space-y-3">
                     {uniqueDomains.map(domain => (
-                      <div key={domain} className="flex items-center space-x-3 min-h-[44px]">
+                      <div key={domain} className="flex items-center space-x-2">
                         <Checkbox
                           id={`domain-${domain}`}
                           checked={filters.domains.includes(domain)}
                           onCheckedChange={() => toggleDomain(domain)}
-                          className="touch-target h-5 w-5"
+                          className="h-5 w-5"
                         />
                         <Label
                           htmlFor={`domain-${domain}`}
-                          className="text-base cursor-pointer leading-relaxed flex-1"
+                          className="flex-1 cursor-pointer text-sm truncate min-h-[44px] flex items-center"
                         >
                           {domain}
                         </Label>

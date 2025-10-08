@@ -24,14 +24,14 @@ export const SelectionControls = ({ results, totalCount }: SelectionControlsProp
   const isAllSelected = selectedCount === results.length && results.length > 0;
 
   return (
-    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-5 sm:p-4 bg-muted/30 rounded-lg border">
+    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 sm:gap-4 p-6 sm:p-5 md:p-4 bg-muted/30 rounded-lg border">
       <div className="flex items-center gap-3 md:gap-4 flex-wrap">
         <Button
           variant="outline"
           size="sm"
           onClick={handleSelectAll}
           disabled={results.length === 0}
-          className="flex items-center gap-2 touch-target min-h-[44px] sm:min-h-0"
+          className="flex items-center gap-2 h-12 sm:h-10"
         >
           {isAllSelected ? (
             <CheckSquare className="w-4 h-4" />
@@ -41,22 +41,22 @@ export const SelectionControls = ({ results, totalCount }: SelectionControlsProp
           <span className="hidden sm:inline">{isAllSelected ? 'Deselect All' : 'Select All'}</span>
         </Button>
 
-        <Badge variant="secondary" className="font-medium text-sm px-3 py-1.5">
+        <Badge variant="secondary" className="font-medium text-base px-4 py-2 sm:text-sm sm:px-3 sm:py-1.5">
           {selectedCount} of {totalCount}
         </Badge>
       </div>
 
       {selectedCount > 0 && (
-        <div className="grid grid-cols-3 md:flex items-center gap-2 w-full md:w-auto">
-          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 touch-target min-h-[44px] sm:min-h-0">
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          <Button variant="outline" size="sm" className="flex-1 min-w-[120px] h-12 sm:h-10 sm:flex-none sm:w-auto flex items-center justify-center gap-2">
             <Download className="w-4 h-4" />
             <span className="hidden sm:inline">Export</span>
           </Button>
-          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 touch-target min-h-[44px] sm:min-h-0">
+          <Button variant="outline" size="sm" className="flex-1 min-w-[120px] h-12 sm:h-10 sm:flex-none sm:w-auto flex items-center justify-center gap-2">
             <Share className="w-4 h-4" />
             <span className="hidden sm:inline">Share</span>
           </Button>
-          <Button variant="outline" size="sm" className="flex items-center justify-center gap-2 text-destructive hover:text-destructive touch-target min-h-[44px] sm:min-h-0">
+          <Button variant="outline" size="sm" className="flex-1 min-w-[120px] h-12 sm:h-10 sm:flex-none sm:w-auto flex items-center justify-center gap-2 text-destructive hover:text-destructive">
             <Trash2 className="w-4 h-4" />
             <span className="hidden sm:inline">Remove</span>
           </Button>
