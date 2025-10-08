@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface CounterContextType {
   count: number;
@@ -7,7 +8,6 @@ interface CounterContextType {
 
 const CounterContext = createContext<CounterContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'assessment_counter';
 const INITIAL_COUNT = 127438; // Base count to start from
 
 interface CounterProviderProps {
@@ -17,21 +17,49 @@ interface CounterProviderProps {
 export const CounterProvider: React.FC<CounterProviderProps> = ({ children }) => {
   const [count, setCount] = useState<number>(INITIAL_COUNT);
 
-  // Load counter from localStorage on mount
+  // Fetch initial count from database and set up real-time updates
   useEffect(() => {
-    const savedCount = localStorage.getItem(STORAGE_KEY);
-    if (savedCount) {
-      const parsedCount = parseInt(savedCount, 10);
-      if (parsedCount > INITIAL_COUNT) {
-        setCount(parsedCount);
-      }
-    }
-  }, []);
+    const fetchAndSubscribe = async () => {
+      try {
+        // Fetch total count from searches table
+        const { count: dbCount, error } = await supabase
+          .from('searches')
+          .select('*', { count: 'exact', head: true });
 
-  // Save counter to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, count.toString());
-  }, [count]);
+        if (error) {
+          console.error('Error fetching search count:', error);
+        } else if (dbCount !== null) {
+          // Add database count to initial count
+          setCount(INITIAL_COUNT + dbCount);
+        }
+
+        // Set up real-time subscription for new searches
+        const channel = supabase
+          .channel('search-counter-updates')
+          .on(
+            'postgres_changes',
+            {
+              event: 'INSERT',
+              schema: 'public',
+              table: 'searches'
+            },
+            (payload) => {
+              console.log('New search detected:', payload);
+              setCount(prevCount => prevCount + 1);
+            }
+          )
+          .subscribe();
+
+        return () => {
+          supabase.removeChannel(channel);
+        };
+      } catch (error) {
+        console.error('Error setting up counter:', error);
+      }
+    };
+
+    fetchAndSubscribe();
+  }, []);
 
   const incrementCounter = () => {
     setCount(prevCount => prevCount + 1);

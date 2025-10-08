@@ -7,6 +7,7 @@ import { searchApi, handleApiError, SearchResponse, SearchApiError } from '@/lib
 import { useCounter } from '@/contexts/CounterContext';
 import { AnimatedCounter } from '@/components/AnimatedCounter';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import heroImage from '@/assets/hero-privacy.jpg';
 
 export interface HeroSectionRef {
@@ -73,6 +74,21 @@ export const HeroSection = forwardRef<HeroSectionRef>((props, ref) => {
       setTimeout(() => setLoadingMessage('Finalizing results...'), 120000);
 
       const response: SearchResponse = await searchApi.searchByName(searchQuery);
+      
+      // Save search to database for counter tracking
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.from('searches').insert([{
+            user_id: user.id,
+            search_query: searchQuery,
+            search_results: JSON.parse(JSON.stringify(response)) as any
+          }]);
+        }
+      } catch (dbError) {
+        console.error('Error saving search to database:', dbError);
+        // Don't fail the search if database save fails
+      }
       
       // Increment counter on successful assessment
       incrementCounter();
