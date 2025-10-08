@@ -336,23 +336,33 @@ const DetailedResults = () => {
           {/* Enhanced Tabbed Content */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             {isMobile ? (
-              <Select value={activeTab} onValueChange={setActiveTab}>
-                <SelectTrigger className="w-full mb-4 h-14 px-4 text-base flex items-center gap-3">
-                  <SelectValue>
-                    {tabOptions.find(t => t.value === activeTab)?.label}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent className="max-h-[400px]">
-                  {tabOptions.map((tab) => (
-                    <SelectItem key={tab.value} value={tab.value} className="py-4 text-base">
-                      <div className="flex items-center gap-2">
-                        <tab.icon className="w-4 h-4" />
-                        {tab.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm pb-4 -mx-4 px-4 border-b mb-6">
+                <Select value={activeTab} onValueChange={setActiveTab}>
+                  <SelectTrigger className="w-full h-14 px-4 text-base flex items-center gap-3 bg-background shadow-sm">
+                    <SelectValue>
+                      {(() => {
+                        const currentTab = tabOptions.find(t => t.value === activeTab);
+                        return currentTab ? (
+                          <div className="flex items-center gap-2">
+                            <currentTab.icon className="w-4 h-4" />
+                            <span>{currentTab.label}</span>
+                          </div>
+                        ) : null;
+                      })()}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent className="max-h-[70vh] z-[100]">
+                    {tabOptions.map((tab) => (
+                      <SelectItem key={tab.value} value={tab.value} className="py-4 text-base">
+                        <div className="flex items-center gap-3">
+                          <tab.icon className="w-5 h-5" />
+                          <span>{tab.label}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             ) : (
               <TabsList className="grid w-full grid-cols-4 xl:grid-cols-7 gap-2">
                 <TabsTrigger value="executive" className="text-xs px-2 py-2 min-h-[44px]">
@@ -387,7 +397,7 @@ const DetailedResults = () => {
             )}
 
             {/* Tab 1: Executive Summary */}
-            <TabsContent value="executive" className="mt-8 sm:mt-6">
+            <TabsContent value="executive" className="mt-6 sm:mt-6">
               <ExecutiveSummary data={analysisData} />
             </TabsContent>
 
