@@ -2,9 +2,8 @@ import React, { ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Shield, Lock, Eye, UserCheck, ArrowRight } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 interface ProtectedResultsProps {
   children: ReactNode;
@@ -14,8 +13,9 @@ interface ProtectedResultsProps {
 
 export const ProtectedResults = ({ children, searchQuery, resultsCount }: ProtectedResultsProps) => {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   // Store search results in localStorage for persistence during auth flow
   React.useEffect(() => {
@@ -44,12 +44,18 @@ export const ProtectedResults = ({ children, searchQuery, resultsCount }: Protec
 
   const handleSignUp = () => {
     const currentPath = location.pathname + location.search;
-    navigate(`/auth?redirectTo=${encodeURIComponent(currentPath)}&tab=signup`);
+    const next = new URLSearchParams(searchParams);
+    next.set('auth', 'signup');
+    next.set('redirectTo', currentPath);
+    navigate(location.pathname + '?' + next.toString(), { state: location.state, replace: true });
   };
 
   const handleSignIn = () => {
     const currentPath = location.pathname + location.search;
-    navigate(`/auth?redirectTo=${encodeURIComponent(currentPath)}&tab=signin`);
+    const next = new URLSearchParams(searchParams);
+    next.set('auth', 'signin');
+    next.set('redirectTo', currentPath);
+    navigate(location.pathname + '?' + next.toString(), { state: location.state, replace: true });
   };
 
   return (

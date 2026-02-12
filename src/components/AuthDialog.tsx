@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -37,6 +37,7 @@ type SignUpFormData = z.infer<typeof signUpSchema>;
 type SignInFormData = z.infer<typeof signInSchema>;
 
 export const AuthDialog = () => {
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { signIn, signUp, verifyOTP, resetPasswordForEmail, updatePassword, user } = useAuth();
@@ -100,15 +101,38 @@ export const AuthDialog = () => {
 
   // Close dialog and redirect when user is authenticated (but not during password reset flow)
   useEffect(() => {
-    if (user && isOpen && !isInPasswordResetFlow) {
-      handleClose();
+    if (!user || !isOpen || isInPasswordResetFlow) return;
+    const redirectTo = searchParams.get('redirectTo');
+    const hasResultsRedirect = redirectTo && redirectTo.startsWith('/results');
+    let state: { searchResponse?: unknown } | undefined;
+    if (hasResultsRedirect) {
+      const pending = localStorage.getItem('pendingSearchResults');
+      if (pending) {
+        try {
+          state = { searchResponse: JSON.parse(pending) };
+        } catch {
+          state = undefined;
+        }
+      }
+    }
+    handleClose();
+    if (hasResultsRedirect && redirectTo) {
+      localStorage.removeItem('pendingSearchResults');
+      navigate(redirectTo, state ? { state } : {});
+    } else {
       navigate('/');
     }
   }, [user, isOpen, isInPasswordResetFlow]);
 
   const handleClose = () => {
-    searchParams.delete('auth');
-    setSearchParams(searchParams);
+    const next = new URLSearchParams(searchParams);
+    next.delete('auth');
+    next.delete('redirectTo');
+    const newSearch = next.toString();
+    navigate(
+      { pathname: location.pathname, search: newSearch ? '?' + newSearch : '' },
+      { state: location.state, replace: true }
+    );
     setShowForgotPassword(false);
     setShowOTPVerification(false);
     setShowPasswordReset(false);
@@ -122,7 +146,12 @@ export const AuthDialog = () => {
   };
 
   const handleTabChange = (value: string) => {
-    setSearchParams({ auth: value });
+    const next = new URLSearchParams(searchParams);
+    next.set('auth', value);
+    navigate(
+      { pathname: location.pathname, search: '?' + next.toString() },
+      { state: location.state, replace: true }
+    );
   };
 
   const handleSignUp = async (data: SignUpFormData) => {
@@ -402,8 +431,26 @@ export const AuthDialog = () => {
           title: 'Password updated!',
           description: 'Your password has been successfully updated.',
         });
+        const redirectTo = searchParams.get('redirectTo');
+        const hasResultsRedirect = redirectTo && redirectTo.startsWith('/results');
+        let state: { searchResponse?: unknown } | undefined;
+        if (hasResultsRedirect) {
+          const pending = localStorage.getItem('pendingSearchResults');
+          if (pending) {
+            try {
+              state = { searchResponse: JSON.parse(pending) };
+            } catch {
+              state = undefined;
+            }
+          }
+        }
         handleClose();
-        navigate('/');
+        if (hasResultsRedirect && redirectTo) {
+          localStorage.removeItem('pendingSearchResults');
+          navigate(redirectTo, state ? { state } : {});
+        } else {
+          navigate('/');
+        }
       }
     } catch (error: any) {
       toast({

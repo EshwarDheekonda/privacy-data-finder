@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useResults } from '@/contexts/ResultsContext';
-import { SearchResult, searchApi } from '@/lib/api';
+import { SearchResult } from '@/lib/api';
 import { Search, ArrowRight, Database, FileText, CheckCircle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
@@ -14,11 +14,10 @@ interface ExtractDetailsSectionProps {
 
 export const ExtractDetailsSection = ({ searchQuery, allResults }: ExtractDetailsSectionProps) => {
   const { selectedCount, getSelectedResults } = useResults();
-  const [isExtracting, setIsExtracting] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
 
-  const handleExtractDetails = async () => {
+  const handleExtractDetails = () => {
     if (selectedCount === 0) {
       toast({
         title: 'No Results Selected',
@@ -28,66 +27,33 @@ export const ExtractDetailsSection = ({ searchQuery, allResults }: ExtractDetail
       return;
     }
 
-    setIsExtracting(true);
+    const selectedResults = getSelectedResults(allResults);
 
-    try {
-      const selectedResults = getSelectedResults(allResults);
-      const selectedUrls = selectedResults.map(result => result.source);
-      
-      // Separate social media and regular URLs
-      const selectedSocial = selectedResults.filter(result => 
-        result.id.startsWith('social-') && !result.id.includes('webpage')
-      );
-      const regularUrls = selectedResults.filter(result => 
-        !result.id.startsWith('social-') || result.id.includes('webpage')
-      ).map(result => result.source);
+    // Separate social media and regular URLs
+    const selectedSocial = selectedResults.filter(result =>
+      result.id.startsWith('social-') && !result.id.includes('webpage')
+    );
+    const regularUrls = selectedResults.filter(result =>
+      !result.id.startsWith('social-') || result.id.includes('webpage')
+    ).map(result => result.source);
 
-      console.log('Extracting details for:', {
-        searchQuery,
-        selectedCount: selectedResults.length,
-        selectedUrls,
-        selectedSocial,
-        regularUrls
-      });
-
-      await searchApi.extractDetails(searchQuery, regularUrls, selectedSocial);
-
-      toast({
-        title: 'Analysis Complete',
-        description: `Processing completed for ${selectedCount} selected result${selectedCount > 1 ? 's' : ''}.`,
-      });
-
-      // Navigate to detailed results page with correct data structure
-      navigate('/detailed-results', {
-        state: {
-          query: searchQuery,
-          selectedUrls: regularUrls,
-          selectedSocial: selectedSocial,
-          selectedResults: selectedResults
-        }
-      });
-
-    } catch (error) {
-      console.error('Extract details error:', error);
-      toast({
-        title: 'Extraction Failed',
-        description: error instanceof Error ? error.message : 'Failed to start extraction process.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsExtracting(false);
-    }
+    navigate('/detailed-results', {
+      state: {
+        query: searchQuery,
+        selectedUrls: regularUrls,
+        selectedSocial: selectedSocial,
+        selectedResults: selectedResults
+      }
+    });
   };
 
   const getButtonText = () => {
-    if (isExtracting) return 'Processing...';
     if (selectedCount === 0) return 'Select Results';
     if (isHovered) return `Analyze ${selectedCount} Result${selectedCount > 1 ? 's' : ''}`;
     return `Extract Details (${selectedCount})`;
   };
 
   const getButtonIcon = () => {
-    if (isExtracting) return <Database className="w-6 h-6 animate-pulse" />;
     if (isHovered) return <ArrowRight className="w-6 h-6" />;
     return <Search className="w-6 h-6" />;
   };
@@ -118,7 +84,7 @@ export const ExtractDetailsSection = ({ searchQuery, allResults }: ExtractDetail
 
           <Button
             onClick={handleExtractDetails}
-            disabled={selectedCount === 0 || isExtracting}
+            disabled={selectedCount === 0}
             size="lg"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -132,7 +98,7 @@ export const ExtractDetailsSection = ({ searchQuery, allResults }: ExtractDetail
             </div>
           </Button>
 
-          {isHovered && selectedCount > 0 && !isExtracting && (
+          {isHovered && selectedCount > 0 && (
             <div className="animate-fade-in mt-4 hidden md:block">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
